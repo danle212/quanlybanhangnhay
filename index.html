@@ -60,6 +60,11 @@
 			border-bottom: 3px solid var(--primary);
 		}
 
+		.tab.disabled {
+			opacity: 0.45;
+			pointer-events: none;
+		}
+
 		.box {
 			background: var(--card);
 			padding: 20px;
@@ -429,15 +434,21 @@
 	<div id="loginOverlay">
 		<div class="login-panel">
 			<h2>Đăng nhập</h2>
-			<div class="input-group">
-				<label>Tài khoản</label>
-				<input type="text" id="loginUser" placeholder="admin">
-			</div>
-			<div class="input-group">
-				<label>Mật khẩu</label>
-				<input type="password" id="loginPass" placeholder="••••••">
-			</div>
-			<button class="btn" onclick="attemptLogin()">Đăng nhập</button>
+			<form id="loginForm" onsubmit="attemptLogin(); return false;">
+				<div class="input-group">
+					<label>URL Web App</label>
+					<input type="text" id="loginAppUrl" placeholder="https://script.google.com/..." autocomplete="off">
+				</div>
+				<div class="input-group">
+					<label>Tài khoản</label>
+					<input type="text" id="loginUser" placeholder="admin" autocomplete="username">
+				</div>
+				<div class="input-group">
+					<label>Mật khẩu</label>
+					<input type="password" id="loginPass" placeholder="••••••" autocomplete="current-password">
+				</div>
+				<button type="submit" class="btn">Đăng nhập</button>
+			</form>
 			<p>Chỉ nhân viên được phép sử dụng.</p>
 		</div>
 	</div>
@@ -450,7 +461,7 @@
 			<div class="tab" onclick="showTab(this, 'caidat')"><i class="fas fa-cog"></i> HỆ THỐNG</div>
 		</div>
 		<div style="display:flex; justify-content:flex-end; margin-bottom:15px;">
-			<button id="logoutBtn" class="btn btn-outline" style="display:none;">Đăng xuất</button>
+			<button id="logoutBtn" class="btn btn-outline" style="display:none;" onclick="logout()">Đăng xuất</button>
 		</div>
 
 		<div id="banhang" class="section active">
@@ -549,7 +560,6 @@
 					<select id="statType" style="width: 250px;" onchange="toggleDateFilter()">
 						<option value="ProductRevenue">Thống kê theo mặt hàng</option>
 						<option value="InvoiceHistory">Lịch sử hóa đơn</option>
-						<option value="Customers">Danh sách khách hàng</option>
 					</select>
 				</div>
 				<button class="btn" id="btnStat" onclick="viewStats()">XEM DỮ LIỆU</button>
@@ -686,49 +696,104 @@
 	<script>
 		let APP_URL = localStorage.getItem('gs_v17_url') || "";
 		document.getElementById('urlApp').value = APP_URL;
-		let products = [], cart = [], customersCache = [], selected = null;
+		let products = [], cart = [], selected = null;
 		let currentRowsData = []; // Lưu dữ liệu đã lọc/gộp để phân trang
 		let currentPage = 1;
 		let rowsPerPage = 20;
 		const LOGIN_STORAGE_KEY = 'appLoggedIn';
-		const VALID_CREDENTIALS = { username: '04thapdoi', password: 'taphoanhay' };
+		const LOGGED_USER_KEY = 'loggedUser';
+		const APP_URL_KEY = 'gs_v17_url';
+		const AUTH_ACTION = 'auth';
 
 		function isLoggedIn() {
 			return localStorage.getItem(LOGIN_STORAGE_KEY) === 'true';
 		}
 
+		function updateTabState() {
+			document.querySelectorAll('.tab').forEach(t => {
+				t.classList.toggle('disabled', !isLoggedIn());
+			});
+		}
+
 		function showLoginScreen() {
+			document.getElementById('loginAppUrl').value = '';
+			document.getElementById('loginUser').value = '';
+			document.getElementById('loginPass').value = '';
 			document.getElementById('loginOverlay').style.display = 'flex';
 			document.querySelector('.container').style.display = 'none';
 			document.getElementById('logoutBtn').style.display = 'none';
+			document.body.style.overflow = 'hidden';
+			updateTabState();
+			document.getElementById('loginAppUrl').focus();
 		}
 
 		function hideLoginScreen() {
 			document.getElementById('loginOverlay').style.display = 'none';
 			document.querySelector('.container').style.display = 'block';
 			document.getElementById('logoutBtn').style.display = 'inline-flex';
+			document.body.style.overflow = 'auto';
+			updateTabState();
 		}
 
-		function attemptLogin() {
+		async function attemptLogin() {
 			const user = document.getElementById('loginUser').value.trim();
 			const pass = document.getElementById('loginPass').value;
+			const loginUrl = document.getElementById('loginAppUrl').value.trim();
 			if (!user || !pass) return alert('Vui lòng nhập tài khoản và mật khẩu.');
-			if (user === VALID_CREDENTIALS.username && pass === VALID_CREDENTIALS.password) {
+
+			APP_URL = loginUrl || document.getElementById('urlApp').value.trim() || APP_URL;
+			if (!APP_URL) return alert('Vui lòng nhập URL Apps Script để xác thực.');
+
+			document.getElementById('urlApp').value = APP_URL;
+			document.getElementById('loginAppUrl').value = APP_URL;
+
+			try {
+				const response = await fetch(APP_URL, {
+					method: 'POST',
+					body: JSON.stringify({ action: AUTH_ACTION, username: user, password: pass })
+				});
+
+				const text = await response.text();
+				let data;
+				try {
+					data = JSON.parse(text);
+				} catch (parseError) {
+					console.error('Lỗi parse JSON đăng nhập:', parseError, text);
+					return alert('Đăng nhập thất bại: phản hồi không hợp lệ từ server.');
+				}
+
+				if (!data || data.status !== 'ok') {
+					return alert(data.message || 'Đăng nhập thất bại.');
+				}
+
+				APP_URL = data.url || APP_URL;
 				localStorage.setItem(LOGIN_STORAGE_KEY, 'true');
+				localStorage.setItem(LOGGED_USER_KEY, user);
+				localStorage.setItem(APP_URL_KEY, APP_URL);
+				localStorage.setItem('appUrl_' + user, APP_URL);
+				document.getElementById('urlApp').value = APP_URL;
 				hideLoginScreen();
-				if (APP_URL) loadProducts();
-			} else {
-				alert('Sai tài khoản hoặc mật khẩu.');
+				loadProducts();
+			} catch (e) {
+				console.error('Lỗi đăng nhập:', e);
+				alert('Không thể xác thực tài khoản. Vui lòng kiểm tra kết nối và thử lại.');
 			}
 		}
 
 		function logout() {
 			localStorage.removeItem(LOGIN_STORAGE_KEY);
+			localStorage.removeItem(LOGGED_USER_KEY);
 			showLoginScreen();
 		}
 
 		function checkLogin() {
-			if (isLoggedIn()) {
+			const loggedUser = localStorage.getItem(LOGGED_USER_KEY);
+			if (isLoggedIn() && loggedUser) {
+				const savedUrl = localStorage.getItem('appUrl_' + loggedUser);
+				if (savedUrl) {
+					APP_URL = savedUrl;
+					document.getElementById('urlApp').value = APP_URL;
+				}
 				hideLoginScreen();
 				if (APP_URL) loadProducts();
 			} else {
@@ -737,6 +802,10 @@
 		}
 
 		function showTab(el, id) {
+			if (!isLoggedIn()) {
+				showLoginScreen();
+				return;
+			}
 			document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
 			document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
 			el.classList.add('active'); document.getElementById(id).classList.add('active');
@@ -763,9 +832,20 @@
 		}
 
 		function saveUrl() {
+			if (!isLoggedIn()) {
+				alert('Vui lòng đăng nhập trước khi kết nối hệ thống.');
+				showLoginScreen();
+				return;
+			}
+
 			APP_URL = document.getElementById('urlApp').value.trim();
-			localStorage.setItem('gs_v17_url', APP_URL);
-			loadProducts(); alert("Đã kết nối!");
+			localStorage.setItem(APP_URL_KEY, APP_URL);
+			const user = localStorage.getItem(LOGGED_USER_KEY);
+			if (user) {
+				localStorage.setItem('appUrl_' + user, APP_URL);
+			}
+			loadProducts();
+			alert("Đã kết nối!");
 		}
 
 		function editCurrentProduct() {
@@ -811,19 +891,26 @@ async function loadProducts() {
 
 			loadLabel.style.display = 'inline-block';
 			try {
-				const r = await fetch(`${APP_URL}?action=get&type=Customers`);
-				const d = await r.json();
-				const found = d.slice(1).find(c => c[0].toString().trim().replace(/^0+/, '') === phoneInput.replace(/^0+/, ''));
-				if (found) {
-					document.getElementById('custName').value = found[1];
-					document.getElementById('oldPoints').innerText = parseFloat(found[2]).toLocaleString();
+				const url = `${APP_URL}?action=get&type=Customers&phone=${encodeURIComponent(phoneInput)}`;
+				const r = await fetch(url, { redirect: 'follow' });
+				const data = await r.json();
+
+				// Server trả về [header, customerRow] nếu tìm thấy, hoặc [] nếu không.
+				const found = (Array.isArray(data) && data.length >= 2) ? data[1] : null;
+				if (found && found[0] !== undefined) {
+					document.getElementById('custName').value = found[1] || "";
+					document.getElementById('oldPoints').innerText = parseFloat(found[2] || 0).toLocaleString();
 				} else {
 					document.getElementById('custName').value = "";
 					document.getElementById('oldPoints').innerText = "0";
 					alert("SĐT chưa có trong hệ thống.");
 				}
-			} catch (e) { alert("Lỗi tải dữ liệu khách!"); }
-			loadLabel.style.display = 'none';
+			} catch (e) {
+				console.error('Lỗi tải dữ liệu khách:', e);
+				alert("Lỗi tải dữ liệu khách!");
+			} finally {
+				loadLabel.style.display = 'none';
+			}
 		}
 
 		// HÀM THÊM SẢN PHẨM MỚI
@@ -1303,13 +1390,6 @@ async function loadProducts() {
 
 			// Reset về trang 1 khi tìm kiếm mới
 			currentPage = 1;
-			if (customersCache.length === 0) {
-				try {
-					const r = await fetch(`${APP_URL}?action=get&type=Customers`);
-					customersCache = await r.json();
-					console.log("Đã tải xong bộ nhớ đệm khách hàng");
-				} catch (e) { console.error("Lỗi tải cache khách:", e); }
-			}
 
 			try {
 				const fetchType = (mode === 'Customers') ? 'Customers' : 'Sales';
