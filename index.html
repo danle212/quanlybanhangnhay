@@ -1383,7 +1383,7 @@ async function loadProducts() {
 				const tds = tr.querySelectorAll('td');
 				const itemName = tds[0]?.innerText || '';
 				const qty = tds[2]?.innerText || '1';
-				const total = tds[1]?.innerText || '0';
+				const total = tds[3]?.innerText || '0';
 				let priceVal = parseFloat(tr.getAttribute('data-price')) || 0;
 				if (priceVal === 0) {
 					const tNum = parseInt(total.replace(/,/g, '')) || 0;
