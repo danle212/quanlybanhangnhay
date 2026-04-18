@@ -376,6 +376,73 @@
 			/* Tiền */
 		}
 
+		@media (max-width: 760px) {
+			body {
+				padding: 12px;
+			}
+
+			.container {
+				max-width: none;
+				padding: 0;
+			}
+
+			.tabs {
+				flex-wrap: wrap;
+				gap: 10px;
+				padding-left: 0;
+			}
+
+			.box {
+				flex-direction: column;
+				align-items: stretch;
+			}
+
+			.box > *,
+			.input-group {
+				flex: 1 1 100% !important;
+				width: 100% !important;
+				min-width: 0;
+			}
+
+			.btn,
+			.btn-outline {
+				width: 100%;
+			}
+
+			.search-item {
+				flex-direction: column;
+				align-items: flex-start;
+				gap: 6px;
+			}
+
+			table,
+			.detail-row table {
+				width: 100%;
+				min-width: 0;
+			}
+
+			th,
+			td {
+				padding: 10px 8px;
+				font-size: 0.82rem;
+				word-break: break-word;
+			}
+
+			.detail-row {
+				overflow-x: auto;
+			}
+
+			.btn-view {
+				padding: 6px 10px;
+				font-size: 0.72rem;
+			}
+
+			#loginOverlay .login-panel {
+				width: min(100%, 95vw);
+				padding: 22px 16px;
+			}
+		}
+
 		.barcode-item {
 			padding: 10px 15px;
 			cursor: pointer;
@@ -1229,36 +1296,36 @@ async function loadProducts() {
 		}
 
 		function rePrintInvoice(invoiceId) {
-			// 1. Lấy vùng chứa chi tiết hóa đơn
 			const detailContainer = document.getElementById(`det-${invoiceId}`);
 			if (!detailContainer) return alert("Không tìm thấy dữ liệu hóa đơn này!");
 
-			// 2. Lấy dòng chính (dòng chứa Ngày, SĐT, Tổng tiền)
 			const mainRow = detailContainer.previousElementSibling;
+			if (!mainRow) return alert("Không tìm thấy thông tin hóa đơn.");
+
 			const mainTds = mainRow.querySelectorAll('td');
+			if (!mainTds || mainTds.length < 4) return alert("Định dạng hóa đơn không đúng.");
 
-			const dateStr = mainTds[0].innerText;
-			const phoneStr = mainTds[2].innerText;
-			const totalStr = mainTds[3].innerText;
+			const dateStr = mainRow.children[0]?.innerText || mainTds[0].innerText;
+			const phoneStr = mainRow.children[2]?.innerText || mainTds[2].innerText;
+			const totalStr = mainRow.children[3]?.innerText || mainTds[3].innerText;
 
-			// 3. Lấy danh sách các dòng sản phẩm bên trong bảng chi tiết
-			const detailRows = Array.from(detailContainer.querySelectorAll('tbody tr'));
+			let detailRows = Array.from(detailContainer.querySelectorAll('tbody tr'));
+			if (detailRows.length === 0) {
+				detailRows = Array.from(detailContainer.querySelectorAll('tr'));
+			}
 			if (detailRows.length === 0) return alert("Hóa đơn không có sản phẩm!");
 
-			// 4. Lấy thông tin Tên khách và Điểm từ dòng đầu tiên (đã lưu trong data- attribute)
 			const firstRow = detailRows[0];
-			const customerName = firstRow.getAttribute('data-cust-name') || "Khách lẻ";
-			const customerPoints = firstRow.getAttribute('data-cust-points') || "0";
+			const customerName = firstRow.dataset?.custName || firstRow.getAttribute('data-cust-name') || "Khách lẻ";
+			const customerPoints = firstRow.dataset?.custPoints || firstRow.getAttribute('data-cust-points') || "0";
 
-			// 5. Đổ dữ liệu vào mẫu in (Phần header)
 			document.getElementById('p-date').innerText = "Ngày: " + dateStr;
 			document.getElementById('p-name').innerText = customerName;
 			document.getElementById('p-phone').innerText = phoneStr;
 			document.getElementById('p-total').innerText = totalStr;
 
-			// 6. Xử lý phần ĐIỂM
 			const pointsArea = document.getElementById('p-points').parentElement;
-			if (phoneStr === "---" || phoneStr === "Khách lẻ") {
+			if (!phoneStr || phoneStr === "---") {
 				pointsArea.style.display = 'none';
 			} else {
 				pointsArea.style.display = 'flex';
@@ -1266,17 +1333,12 @@ async function loadProducts() {
 				document.getElementById('p-points').innerText = parseFloat(customerPoints).toLocaleString();
 			}
 
-			// 7. Đổ chi tiết hàng hóa (QUAN TRỌNG: Lấy đúng data-price)
 			document.getElementById('p-body').innerHTML = detailRows.map(tr => {
 				const tds = tr.querySelectorAll('td');
-				const itemName = tds[0].innerText;
-				const qty = tds[1].innerText;
-				const total = tds[2].innerText;
-
-				// Lấy giá từ data-price mà bạn đã thấy trong Inspect
+				const itemName = tds[0]?.innerText || '';
+				const qty = tds[1]?.innerText || '1';
+				const total = tds[2]?.innerText || '0';
 				let priceVal = parseFloat(tr.getAttribute('data-price')) || 0;
-
-				// Nếu lỡ data-price bằng 0 thì tính thủ công (Phòng hờ)
 				if (priceVal === 0) {
 					const tNum = parseInt(total.replace(/,/g, '')) || 0;
 					const qNum = parseFloat(qty) || 1;
@@ -1289,11 +1351,9 @@ async function loadProducts() {
 					<td style="text-align:right">${priceVal.toLocaleString()}</td>
 					<td style="text-align:center">${qty}</td>
 					<td style="text-align:right">${total}</td>
-				</tr>
-			`;
+				</tr>`;
 			}).join('');
 
-			// 8. Tiến hành in
 			document.getElementById('printArea').style.display = 'block';
 			setTimeout(() => {
 				window.print();
