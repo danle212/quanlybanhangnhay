@@ -1030,8 +1030,18 @@ async function loadProducts() {
 				});
 
 				const result = await response.text();
-				if (result === "Success" || result === "Updated") {
-					alert(result === "Success" ? "Đã thêm sản phẩm thành công!" : "Đã cập nhật sản phẩm thành công!");
+				let parsed = null;
+				try {
+					parsed = JSON.parse(result);
+				} catch (_err) {
+					parsed = null;
+				}
+
+				const statusOk = parsed ? (parsed.status === 'ok' || parsed.status === 'success') : (result === "Success" || result === "Updated");
+				const message = parsed ? (parsed.message || result) : result;
+
+				if (statusOk) {
+					alert(message === "Success" ? "Đã thêm sản phẩm thành công!" : message === "Updated" ? "Đã cập nhật sản phẩm thành công!" : message);
 
 					// Reset Form và mở khóa Mã
 					codeInp.value = "";
@@ -1043,7 +1053,7 @@ async function loadProducts() {
 
 					if (typeof loadProducts === "function") await loadProducts();
 				} else {
-					alert("Lỗi từ server: " + result);
+					alert("Lỗi từ server: " + message);
 				}
 			} catch (e) {
 				alert("Lỗi kết nối: " + e.message);
