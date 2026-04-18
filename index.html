@@ -993,16 +993,37 @@ async function loadProducts() {
 			inp.focus();
 		}
 
+		function normalizeText(text) {
+			return text
+				.toLowerCase()
+				.normalize('NFD')
+				.replace(/đ/g, 'd').replace(/Đ/g, 'D')
+				.replace(/[̀-ͯ]/g, '')
+				.replace(/\s+/g, ' ')
+				.trim();
+		}
+
 		function searchProduct() {
-			const v = document.getElementById('searchProd').value.toLowerCase().trim();
+			const rawValue = document.getElementById('searchProd').value.trim();
+			const v = normalizeText(rawValue);
 			const res = document.getElementById('resProd');
 			if (!v) { res.style.display = 'none'; return; }
 
-			const match = products.filter(p =>
-				p.name.toLowerCase().includes(v) ||
-				(p.code && p.code.toLowerCase().includes(v)) ||
-				(p.barcode && p.barcode.includes(v))
-			).slice(0, 10);
+			const tokens = v.split(' ').filter(Boolean);
+
+			const match = products.filter(p => {
+				const name = normalizeText(p.name || '');
+				const code = normalizeText(p.code || '');
+				const barcode = normalizeText(p.barcode || '');
+
+				if (tokens.every(token => name.includes(token))) return true;
+				if (tokens.every(token => code.includes(token))) return true;
+				if (tokens.every(token => barcode.includes(token))) return true;
+
+				// allow mixed search on name + code/barcode
+				const combined = `${name} ${code} ${barcode}`;
+				return tokens.every(token => combined.includes(token));
+			}).slice(0, 10);
 
 			res.innerHTML = match.map(p => `
 			<div class="search-item" onmousedown="pick('${p.name.replace(/'/g, "\\'")}', '${p.unit}', ${p.price})">
@@ -1012,7 +1033,7 @@ async function loadProducts() {
 				</div>
 			</div>
 		`).join('');
-			res.style.display = 'block';
+			res.style.display = match.length ? 'block' : 'none';
 		}
 
 		function pick(n, u, p) {
@@ -1497,7 +1518,22 @@ async function loadProducts() {
 					</td>
 				</tr>
 				<tr id="det-${inv.id}" class="detail-row" style="display:none;"><td colspan="5">
-					<table style="width:95%; margin:10px auto; border:1px solid #444;">
+					<div style="padding: 12px 14px; background: #1a1a1a; margin-bottom: 12px; border-radius: 8px; border: 1px solid #333;">
+						<div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; color:#fff;">
+							<div><strong>Khách hàng:</strong> ${custName}</div>
+							<div><strong>Tổng tiền:</strong> ${inv.total.toLocaleString()} đ</div>
+							<div><strong>Điểm tích lũy:</strong> ${custPoints.toLocaleString()}</div>
+						</div>
+					</div>
+					<table style="width:95%; margin:0 auto 10px; border:1px solid #444;">
+						<thead>
+							<tr style="background:#252525; color:#fff;">
+								<th style="padding: 10px; text-align:left;">Sản phẩm</th>
+								<th style="padding: 10px; text-align:right;">Giá</th>
+								<th style="padding: 10px; text-align:center;">SL</th>
+								<th style="padding: 10px; text-align:right;">Thành tiền</th>
+							</tr>
+						</thead>
 						<tbody>
 							${inv.items.map(it => {
 						// it[4] là cột E (Giá), it[5] là cột F (SL), it[6] là cột G (Tổng)
@@ -1505,9 +1541,10 @@ async function loadProducts() {
 						const price = parseFloat(it[4]) || (parseFloat(it[6]) / parseFloat(it[5])) || 0;
 
 						return `<tr data-price="${price}" data-cust-name="${custName}" data-cust-points="${custPoints}">
-								<td>${it[2]}</td>
-								<td>${it[5]}</td>
-								<td>${parseFloat(it[6]).toLocaleString()}</td>
+								<td style="padding: 10px;">${it[2]}</td>
+								<td style="padding: 10px; text-align:right;">${price.toLocaleString()} đ</td>
+								<td style="padding: 10px; text-align:center;">${it[5]}</td>
+								<td style="padding: 10px; text-align:right;">${parseFloat(it[6]).toLocaleString()} đ</td>
 							</tr>`;
 					}).join('')}
 						</tbody>
