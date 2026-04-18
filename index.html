@@ -1297,8 +1297,6 @@
 		function removeCart(idx) { cart.splice(idx, 1); renderCart(); }
 
 		function printInvoice() {
-			if (!cart.length) return alert("Giỏ hàng trống!");
-
 			const name = document.getElementById('custName').value.trim();
 			const phone = document.getElementById('custPhone').value.trim();
 
@@ -1451,10 +1449,19 @@
 
 			// 1. Kiểm tra "gác cổng": Nếu ô tìm kiếm còn chữ thì dừng lại
 			if (searchInput.value.trim() !== "") {
-				alert("⚠️ Vui lòng bấm 'THÊM' hoặc xóa nội dung ở ô tìm kiếm trước khi thanh toán!");
+				alert("⚠️ QUÊN THÊM SẢN PHẨM VÀO GIỎ HÀNG RỒI BẠN!");
 				searchInput.focus();
 				return;
 			}
+
+			const tableRows = document.querySelectorAll('#cartBody tr');
+			if (tableRows.length === 0) {
+				alert("Giỏ hàng đang trống!");
+				return false;
+			}
+
+			const vnfirm = confirm("Bạn có chắc chắn muốn THANH TOÁN hóa đơn này không?");
+			if (!vnfirm) return; // Nếu chọn Cancel thì dừng lại luôn
 
 			// 2. Thực hiện lưu dữ liệu vào Google Sheets
 			const thanhCong = await saveAll();
@@ -1462,23 +1469,14 @@
 			// 3. Nếu lưu thành công, kích hoạt hàm in ngay lập tức
 			if (thanhCong === true) {
 				// Gọi hàm in luôn, không hỏi confirm nữa
-				await printInvoice();
-
-				// Đợi 1 giây để đảm bảo lệnh in đã được trình duyệt tiếp nhận
+				printInvoice();
 				setTimeout(() => {
-					alert("Đã lưu hóa đơn");
-					location.reload(); // Làm mới để đón khách tiếp theo
-				}, 1000);
+					location.reload(); // Làm mới trang để xóa sạch giỏ hàng
+				}, 500);
 			}
 		}
 
 		async function saveAll() {
-			const tableRows = document.querySelectorAll('#cartBody tr');
-			if (tableRows.length === 0) {
-				alert("Giỏ hàng đang trống!");
-				return false;
-			}
-
 			const overlay = document.getElementById('loadingOverlay');
 			if (overlay) overlay.style.display = 'flex';
 
