@@ -39,6 +39,8 @@
 			border-bottom: 1px solid var(--border);
 			margin-bottom: 25px;
 			padding-left: 20px;
+			justify-content: space-between;
+			align-items: center;
 		}
 
 		.tab {
@@ -328,6 +330,7 @@
 				width: 100% !important;
 				border: none !important;
 				border-collapse: collapse;
+				table-layout: fixed !important;
 				margin-top: 5px;
 			}
 
@@ -335,6 +338,7 @@
 				border-bottom: 1px solid black !important;
 				padding: 5px 0 !important;
 				font-size: 8pt;
+				text-align: left;
 			}
 
 			#printArea td {
@@ -342,35 +346,25 @@
 				padding: 6px 0 !important;
 				font-size: 9pt;
 				vertical-align: top;
+				word-break: break-word;
+				white-space: normal !important;
 			}
 
-			/* Căn chỉnh lại các cột trong hóa đơn để thêm Đơn giá */
-			#printArea th:nth-child(1),
 			#printArea td:nth-child(1) {
-				width: 45%;
-				text-align: left;
+				width: 45% !important;
 			}
 
-			/* Tên hàng */
-			#printArea th:nth-child(2),
-			#printArea td:nth-child(2) {
-				width: 25%;
-				text-align: right;
-			}
-
-			/* Đơn giá */
-			#printArea th:nth-child(3),
-			#printArea td:nth-child(3) {
-				width: 10%;
-				text-align: center;
-			}
-
-			/* SL */
-			#printArea th:nth-child(4),
+			#printArea td:nth-child(2),
 			#printArea td:nth-child(4) {
-				width: 20%;
+				width: 20% !important;
+				white-space: nowrap !important;
 				text-align: right;
-				font-weight: bold;
+			}
+
+			#printArea td:nth-child(3) {
+				width: 15% !important;
+				white-space: nowrap !important;
+				text-align: center;
 			}
 
 			/* Tiền */
@@ -390,6 +384,7 @@
 				flex-wrap: wrap;
 				gap: 10px;
 				padding-left: 0;
+				justify-content: flex-end;
 			}
 
 			.box {
@@ -526,8 +521,6 @@
 			</div>
 			<div class="tab" onclick="showTab(this, 'thongke')"><i class="fas fa-chart-bar"></i> THỐNG KÊ</div>
 			<div class="tab" onclick="showTab(this, 'caidat')"><i class="fas fa-cog"></i> HỆ THỐNG</div>
-		</div>
-		<div style="display:flex; justify-content:flex-end; margin-bottom:15px;">
 			<button id="logoutBtn" class="btn btn-outline" style="display:none;" onclick="logout()">Đăng xuất</button>
 		</div>
 
@@ -653,8 +646,10 @@
 
 		<div id="caidat" class="section">
 			<div class="box" style="flex-direction: column; align-items: flex-start;">
-				<h3 style="color: var(--secondary); margin-top: 0;"><i class="fas fa-plus-circle"></i> CHỈNH SỬA SẢN
-					PHẨM</h3>
+				<div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 15px;">
+					<h3 style="color: var(--secondary); margin: 0;"><i class="fas fa-plus-circle"></i> CHỈNH SỬA SẢN PHẨM</h3>
+					<button class="btn" style="background: #28a745;" onclick="exportProducts()">📥 EXPORT SẢN PHẨM</button>
+				</div>
 				<div style="display: flex; flex-wrap: wrap; gap: 15px; width: 100%;">
 					<div class="input-group" style="width: 130px; flex: none;">
 						<label>Mã sản phẩm</label>
@@ -686,7 +681,7 @@
 				</div>
 				<div style="margin-top: 15px; display: flex; align-items: center; gap: 10px;">
 					<button id="btnSaveProduct" class="btn btn-cyan" onclick="addNewProduct()">✅ LƯU SẢN PHẨM</button>
-					<button class="btn" style="background: #666;" onclick="clearProductInput()">
+						<button class="btn" style="background: #666;" onclick="clearProductInput()">
 						<i class="fas fa-trash-alt"></i> HỦY
 					</button>
 					<span id="loadNewProd" class="loader" style="display:none;"><i class="fas fa-spinner fa-spin"></i>
@@ -949,6 +944,43 @@ async function loadProducts() {
 					barcode: r[4] ? r[4].toString().trim() : ""
 				}));
 			} catch (e) { console.error("Lỗi tải sản phẩm:", e); }
+		}
+
+		// HÀM EXPORT DANH SÁCH SẢN PHẨM THÀNH FILE CSV
+		function exportProducts() {
+			if (!products || products.length === 0) {
+				return alert("Không có sản phẩm nào để export!");
+			}
+
+			// Tạo header CSV
+			let csv = "Mã sản phẩm,Tên sản phẩm,Đơn vị tính,Giá bán,Mã vạch\n";
+
+			// Thêm dữ liệu từng sản phẩm
+			products.forEach(p => {
+				const row = [
+					`"${p.code.replace(/"/g, '""')}"`,  // Escape quotes
+					`"${p.name.replace(/"/g, '""')}"`,
+					`"${p.unit.replace(/"/g, '""')}"`,
+					p.price,
+					`"${(p.barcode || '').replace(/"/g, '""')}"`
+				].join(",");
+				csv += row + "\n";
+			});
+
+			// Thêm BOM để Excel hiểu UTF-8
+			const BOM = '\uFEFF';
+			csv = BOM + csv;
+
+			// Tạo blob và download
+			const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+			const link = document.createElement("a");
+			const url = URL.createObjectURL(blob);
+			link.setAttribute("href", url);
+			link.setAttribute("download", `danh-sach-san-pham-${new Date().toISOString().split('T')[0]}.csv`);
+			link.style.visibility = 'hidden';
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
 		}
 
 		async function checkCustomer() {
@@ -1323,6 +1355,10 @@ async function loadProducts() {
 			if (detailRows.length === 0) {
 				detailRows = Array.from(detailContainer.querySelectorAll('tr'));
 			}
+			detailRows = detailRows.filter(tr => {
+				const itemName = tr.querySelector('td')?.innerText.trim();
+				return itemName && itemName !== 'undefined';
+			});
 			if (detailRows.length === 0) return alert("Hóa đơn không có sản phẩm!");
 
 			const firstRow = detailRows[0];
@@ -1346,8 +1382,8 @@ async function loadProducts() {
 			document.getElementById('p-body').innerHTML = detailRows.map(tr => {
 				const tds = tr.querySelectorAll('td');
 				const itemName = tds[0]?.innerText || '';
-				const qty = tds[1]?.innerText || '1';
-				const total = tds[2]?.innerText || '0';
+				const qty = tds[2]?.innerText || '1';
+				const total = tds[1]?.innerText || '0';
 				let priceVal = parseFloat(tr.getAttribute('data-price')) || 0;
 				if (priceVal === 0) {
 					const tNum = parseInt(total.replace(/,/g, '')) || 0;
