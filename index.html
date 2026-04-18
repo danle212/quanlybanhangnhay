@@ -392,7 +392,7 @@
 				align-items: stretch;
 			}
 
-			.box > *,
+			.box>*,
 			.input-group {
 				flex: 1 1 100% !important;
 				width: 100% !important;
@@ -602,9 +602,10 @@
 				<h2 style="margin: 0;">TỔNG: <span id="grandTotal" style="color:var(--secondary)">0</span> đ</h2>
 				<div style="display: flex; align-items: center; gap: 12px;">
 					<span id="loadSave" class="loader"><i class="fas fa-spinner fa-spin"></i> Đang lưu...</span>
-					<button class="btn btn-outline" onclick="printInvoice()"><i class="fas fa-print"></i> IN HÓA
-						ĐƠN</button>
-					<button class="btn btn-cyan" id="btnSave" onclick="saveAll()">✅ LƯU HÓA ĐƠN</button>
+					<button class="btn btn-success" onclick="handleCheckout()"
+						style="width: 100%; padding: 15px; font-weight: bold; font-size: 18px;">
+						<i class="fas fa-cash-register"></i> THANH TOÁN
+					</button>
 				</div>
 			</div>
 		</div>
@@ -646,9 +647,12 @@
 
 		<div id="caidat" class="section">
 			<div class="box" style="flex-direction: column; align-items: flex-start;">
-				<div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 15px;">
-					<h3 style="color: var(--secondary); margin: 0;"><i class="fas fa-plus-circle"></i> CHỈNH SỬA SẢN PHẨM</h3>
-					<button class="btn" style="background: #28a745;" onclick="exportProducts()">📥 EXPORT SẢN PHẨM</button>
+				<div
+					style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 15px;">
+					<h3 style="color: var(--secondary); margin: 0;"><i class="fas fa-plus-circle"></i> CHỈNH SỬA SẢN
+						PHẨM</h3>
+					<button class="btn" style="background: #28a745;" onclick="exportProducts()">📥 EXPORT SẢN
+						PHẨM</button>
 				</div>
 				<div style="display: flex; flex-wrap: wrap; gap: 15px; width: 100%;">
 					<div class="input-group" style="width: 130px; flex: none;">
@@ -681,7 +685,7 @@
 				</div>
 				<div style="margin-top: 15px; display: flex; align-items: center; gap: 10px;">
 					<button id="btnSaveProduct" class="btn btn-cyan" onclick="addNewProduct()">✅ LƯU SẢN PHẨM</button>
-						<button class="btn" style="background: #666;" onclick="clearProductInput()">
+					<button class="btn" style="background: #666;" onclick="clearProductInput()">
 						<i class="fas fa-trash-alt"></i> HỦY
 					</button>
 					<span id="loadNewProd" class="loader" style="display:none;"><i class="fas fa-spinner fa-spin"></i>
@@ -930,9 +934,14 @@
 
 			// 3. Khóa mã sản phẩm lại để không cho sửa mã (nếu không muốn đổi mã)
 			document.getElementById('newProdCode').readOnly = true;
+			// Reset các ô nhập liệu
+			selected = null;
+			document.getElementById('searchProd').value = "";
+			document.getElementById('unitProd').value = "";
+			document.getElementById('qtyProd').value = "";
 		}
 
-async function loadProducts() {
+		async function loadProducts() {
 			try {
 				const res = await fetch(`${APP_URL}?action=get&type=Products`);
 				const data = await res.json();
@@ -1437,41 +1446,55 @@ async function loadProducts() {
 			}
 		}
 
+		async function handleCheckout() {
+			const searchInput = document.getElementById('searchProd');
+
+			// 1. Kiểm tra "gác cổng": Nếu ô tìm kiếm còn chữ thì dừng lại
+			if (searchInput.value.trim() !== "") {
+				alert("⚠️ Vui lòng bấm 'THÊM' hoặc xóa nội dung ở ô tìm kiếm trước khi thanh toán!");
+				searchInput.focus();
+				return;
+			}
+
+			// 2. Thực hiện lưu dữ liệu vào Google Sheets
+			const thanhCong = await saveAll();
+
+			// 3. Nếu lưu thành công, kích hoạt hàm in ngay lập tức
+			if (thanhCong === true) {
+				// Gọi hàm in luôn, không hỏi confirm nữa
+				await printInvoice();
+
+				// Đợi 1 giây để đảm bảo lệnh in đã được trình duyệt tiếp nhận
+				setTimeout(() => {
+					alert("Đã lưu hóa đơn");
+					location.reload(); // Làm mới để đón khách tiếp theo
+				}, 1000);
+			}
+		}
+
 		async function saveAll() {
-			if (cart.length === 0) return alert("Giỏ hàng trống!");
+			const tableRows = document.querySelectorAll('#cartBody tr');
+			if (tableRows.length === 0) {
+				alert("Giỏ hàng đang trống!");
+				return false;
+			}
+
 			const overlay = document.getElementById('loadingOverlay');
 			if (overlay) overlay.style.display = 'flex';
+
 			const phone = document.getElementById('custPhone').value.trim();
 			const name = document.getElementById('custName').value.trim();
 			const oldPts = parseFloat(document.getElementById('oldPoints').innerText.replace(/,/g, '')) || 0;
 			const plusPts = parseFloat(document.getElementById('plusPoints').value) || 0;
-			const finalPts = oldPts + plusPts; // Tổng điểm sau khi mua
+			const finalPts = oldPts + plusPts;
 
-			// Tạo mã hóa đơn dựa trên thời gian
 			const invoiceID = "HD" + Date.now().toString().slice(-6);
 			const d = new Date();
-			const now = [
-				d.getFullYear(),
-				("0" + (d.getMonth() + 1)).slice(-2),
-				("0" + d.getDate()).slice(-2)
-			].join('-') + ' ' + [
-				("0" + d.getHours()).slice(-2),
-				("0" + d.getMinutes()).slice(-2),
-				("0" + d.getSeconds()).slice(-2)
-			].join(':');
+			const now = [d.getFullYear(), ("0" + (d.getMonth() + 1)).slice(-2), ("0" + d.getDate()).slice(-2)].join('-') + ' ' +
+				[("0" + d.getHours()).slice(-2), ("0" + d.getMinutes()).slice(-2), ("0" + d.getSeconds()).slice(-2)].join(':');
 
-			// CHUẨN HÓA 10 CỘT DỮ LIỆU
 			const dataRows = cart.map(item => [
-				invoiceID,      // 0: Mã HD
-				now,            // 1: Ngày
-				item.n,         // 2: Tên sản phẩm
-				item.u,         // 3: ĐVT
-				item.p,         // 4: Giá
-				item.q,         // 5: SL
-				item.t,         // 6: Tổng
-				"'" + phone,    // 7: SĐT (Thêm dấu nháy đơn để Google Sheet không mất số 0 đầu)
-				name,           // 8: Tên Khách (CỘT MỚI)
-				finalPts        // 9: Điểm tích lũy tại thời điểm in (CỘT MỚI)
+				invoiceID, now, item.n, item.u, item.p, item.q, item.t, "'" + phone, name, finalPts
 			]);
 
 			try {
@@ -1482,8 +1505,8 @@ async function loadProducts() {
 					body: JSON.stringify({ action: 'save', rows: dataRows })
 				});
 
-				// Cập nhật điểm vào bảng Customers nếu có SĐT
-				if (phone !== "---") {
+				// Cập nhật điểm
+				if (phone !== "" && phone !== "---") {
 					await fetch(APP_URL, {
 						method: 'POST',
 						mode: 'no-cors',
@@ -1496,14 +1519,14 @@ async function loadProducts() {
 					});
 				}
 
-				alert("Lưu hóa đơn thành công!");
-				location.reload();
+				if (overlay) overlay.style.display = 'none';
+				return true; // Trả về true để xác nhận lưu THÀNH CÔNG
 			} catch (e) {
 				if (overlay) overlay.style.display = 'none';
 				alert("Lỗi: " + e.message);
+				return false;
 			}
 		}
-
 		// Các hàm thống kê viewStats, toggleDetail giữ nguyên từ bản gốc của bạn
 		async function viewStats() {
 			const mode = document.getElementById('statType').value;
