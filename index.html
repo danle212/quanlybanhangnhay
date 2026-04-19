@@ -637,6 +637,14 @@
 			0% { background-position: 200% 0; }
 			100% { background-position: -200% 0; }
 		}
+
+		.cart-empty {
+			text-align: center;
+			padding: 40px 20px;
+			color: #555;
+			font-size: 0.95rem;
+			vertical-align: middle;
+		}
 			text-align: center;
 			padding: 30px;
 			color: #555;
@@ -975,6 +983,9 @@
 	<script>
 		let APP_URL = localStorage.getItem('gs_v17_url') || "";
 		document.getElementById('urlApp').value = APP_URL;
+		const _today = new Date().toISOString().split('T')[0];
+		document.getElementById('startDate').value = _today;
+		document.getElementById('endDate').value = _today;
 		let products = [], cart = [], selected = null;
 		let currentRowsData = []; // Lưu dữ liệu đã lọc/gộp để phân trang
 		let currentPage = 1;
@@ -1012,7 +1023,7 @@
 			document.getElementById('accountMenuWrap').style.display = 'block';
 			document.body.style.overflow = 'auto';
 			updateTabState();
-			const sn = localStorage.getItem('appStoreName') || localStorage.getItem(LOGGED_USER_KEY) || 'Cửa hàng';
+			const sn = localStorage.getItem('appStoreName') || localStorage.getItem(LOGIN_STORAGE_KEY) || 'Cửa hàng';
 			document.getElementById('storeNameDisplay').innerText = sn;
 		}
 
