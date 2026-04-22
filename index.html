@@ -638,6 +638,59 @@
 			100% { background-position: -200% 0; }
 		}
 
+		.cart-tabs-bar {
+			display: flex;
+			align-items: center;
+			gap: 4px;
+			margin-bottom: 12px;
+			flex-wrap: wrap;
+		}
+
+		.cart-tab-btn {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			padding: 6px 14px;
+			border-radius: 6px 6px 0 0;
+			border: 1px solid var(--border);
+			border-bottom: none;
+			background: #252525;
+			color: #888;
+			cursor: pointer;
+			font-size: 0.85rem;
+			white-space: nowrap;
+			transition: 0.2s;
+		}
+
+		.cart-tab-btn.active {
+			background: var(--card);
+			color: var(--secondary);
+			border-color: var(--secondary);
+		}
+
+		.cart-tab-btn .close-tab {
+			color: #666;
+			font-size: 0.75rem;
+			padding: 0 2px;
+			line-height: 1;
+		}
+
+		.cart-tab-btn .close-tab:hover { color: #ff6b6b; }
+
+		.add-cart-tab {
+			padding: 6px 12px;
+			border-radius: 6px;
+			border: 1px dashed var(--border);
+			background: none;
+			color: var(--secondary);
+			cursor: pointer;
+			font-size: 1rem;
+			line-height: 1;
+			transition: 0.2s;
+		}
+
+		.add-cart-tab:hover { background: #252525; }
+
 		.cart-empty {
 			text-align: center;
 			padding: 40px 20px;
@@ -718,6 +771,11 @@
 		</div>
 
 		<div id="banhang" class="section active">
+			<!-- THANH TAB GIỎ HÀNG -->
+			<div class="cart-tabs-bar" id="cartTabsBar">
+				<!-- Các tab sẽ được render bằng JS -->
+				<button class="add-cart-tab" onclick="addCartTab()" title="Thêm đơn hàng mới">＋</button>
+			</div>
 			<div class="box">
 				<div class="input-group">
 					<label>Số điện thoại</label>
@@ -986,14 +1044,111 @@
 		const _today = new Date().toISOString().split('T')[0];
 		document.getElementById('startDate').value = _today;
 		document.getElementById('endDate').value = _today;
-		let products = [], customers = [], cart = [], selected = null;
-		let currentRowsData = []; // Lưu dữ liệu đã lọc/gộp để phân trang
+		let products = [], customers = [], selected = null;
+		let currentRowsData = [];
 		let currentPage = 1;
 		let rowsPerPage = 20;
 		const LOGIN_STORAGE_KEY = 'appLoggedIn';
 		const LOGGED_USER_KEY = 'loggedUser';
 		const APP_URL_KEY = 'gs_v17_url';
 		const AUTH_ACTION = 'auth';
+
+		// ===== MULTI-TAB GIỎ HÀNG =====
+		let cartTabs = []; // mảng các tab
+		let activeTabId = null;
+
+		function createTab() {
+			const id = 'tab_' + Date.now();
+			return {
+				id,
+				label: 'Đơn ' + (cartTabs.length + 1),
+				cart: [],
+				phone: '', name: '', oldPoints: 0, plusPoints: 0
+			};
+		}
+
+		function getActiveTab() {
+			return cartTabs.find(t => t.id === activeTabId);
+		}
+
+		function saveActiveTabState() {
+			const tab = getActiveTab();
+			if (!tab) return;
+			tab.phone = document.getElementById('custPhone').value;
+			tab.name = document.getElementById('custName').value;
+			tab.oldPoints = parseFloat(document.getElementById('oldPoints').innerText.replace(/,/g, '')) || 0;
+			tab.plusPoints = parseFloat(document.getElementById('plusPoints').value) || 0;
+		}
+
+		function restoreTabState(tab) {
+			document.getElementById('custPhone').value = tab.phone || '';
+			document.getElementById('custName').value = tab.name || '';
+			document.getElementById('oldPoints').innerText = (tab.oldPoints || 0).toLocaleString();
+			document.getElementById('plusPoints').value = tab.plusPoints || 0;
+			document.getElementById('searchProd').value = '';
+			document.getElementById('unitProd').value = '';
+			document.getElementById('qtyProd').value = '1';
+			selected = null;
+			renderCart();
+		}
+
+		function renderCartTabs() {
+			const bar = document.getElementById('cartTabsBar');
+			const addBtn = bar.querySelector('.add-cart-tab');
+			// Xóa các tab cũ (giữ lại nút +)
+			bar.querySelectorAll('.cart-tab-btn').forEach(el => el.remove());
+			cartTabs.forEach(tab => {
+				const btn = document.createElement('button');
+				btn.className = 'cart-tab-btn' + (tab.id === activeTabId ? ' active' : '');
+				const itemCount = tab.cart.length;
+				btn.innerHTML = `
+					<span onclick="switchCartTab('${tab.id}')">${tab.label}${itemCount > 0 ? ` <span style="color:var(--secondary);font-size:0.75rem;">(${itemCount})</span>` : ''}</span>
+					${cartTabs.length > 1 ? `<span class="close-tab" onclick="closeCartTab('${tab.id}', event)">✕</span>` : ''}
+				`;
+				bar.insertBefore(btn, addBtn);
+			});
+		}
+
+		function addCartTab() {
+			saveActiveTabState();
+			const tab = createTab();
+			cartTabs.push(tab);
+			switchCartTab(tab.id);
+		}
+
+		function switchCartTab(id) {
+			saveActiveTabState();
+			activeTabId = id;
+			const tab = getActiveTab();
+			if (tab) restoreTabState(tab);
+			renderCartTabs();
+		}
+
+		function closeCartTab(id, e) {
+			e.stopPropagation();
+			const tab = cartTabs.find(t => t.id === id);
+			if (tab && tab.cart.length > 0) {
+				if (!confirm(`Đóng "${tab.label}" sẽ xóa ${tab.cart.length} sản phẩm. Tiếp tục?`)) return;
+			}
+			cartTabs = cartTabs.filter(t => t.id !== id);
+			if (activeTabId === id) {
+				activeTabId = cartTabs[cartTabs.length - 1]?.id;
+				const tab = getActiveTab();
+				if (tab) restoreTabState(tab);
+			}
+			renderCartTabs();
+		}
+
+		// Khởi tạo tab đầu tiên
+		function initCartTabs() {
+			cartTabs = [];
+			const first = createTab();
+			cartTabs = [first];
+			activeTabId = first.id;
+			restoreTabState(first);
+			renderCartTabs();
+		}
+		// ===== END MULTI-TAB =====
 
 		function isLoggedIn() {
 			return localStorage.getItem(LOGIN_STORAGE_KEY) === 'true';
@@ -1025,6 +1180,7 @@
 			updateTabState();
 			const sn = localStorage.getItem('appStoreName') || localStorage.getItem(LOGIN_STORAGE_KEY) || 'Cửa hàng';
 			document.getElementById('storeNameDisplay').innerText = sn;
+			initCartTabs();
 		}
 
 		function toggleLoginPass() {
@@ -1669,40 +1825,25 @@
 
 
 		function addToCart() {
-			if (!selected) {
-				alert("Vui lòng chọn sản phẩm trước!");
-				return;
-			}
-
+			if (!selected) { alert("Vui lòng chọn sản phẩm trước!"); return; }
 			const qty = parseFloat(document.getElementById('qtyProd').value) || 0;
 			if (qty <= 0) return;
-
-			const item = {
-				n: selected.n,
-				u: selected.u,
-				p: selected.p,
-				q: qty,
-				t: selected.p * qty
-			};
-
-			cart.push(item);
-			renderCart(); // Vẽ lại giỏ hàng
-
-			// Reset các ô nhập liệu
+			const tab = getActiveTab();
+			if (!tab) return;
+			tab.cart.push({ n: selected.n, u: selected.u, p: selected.p, q: qty, t: selected.p * qty });
+			renderCart();
+			renderCartTabs(); // cập nhật số lượng trên tab
 			selected = null;
-			document.getElementById('searchProd').value = "";
-			document.getElementById('unitProd').value = "";
-			document.getElementById('qtyProd').value = "";
-
-			// Đưa con trỏ về ô mã vạch để bắn tiếp
+			document.getElementById('searchProd').value = '';
+			document.getElementById('unitProd').value = '';
+			document.getElementById('qtyProd').value = '1';
 			const scanner = document.getElementById('barcodeScanner');
-			if (scanner) {
-				scanner.value = "";
-				scanner.focus();
-			}
+			if (scanner) { scanner.value = ''; scanner.focus(); }
 		}
 
 		function renderCart() {
+			const tab = getActiveTab();
+			const cart = tab ? tab.cart : [];
 			let total = 0;
 			if (cart.length === 0) {
 				document.getElementById('cartBody').innerHTML = '<tr><td colspan="6" class="cart-empty"><i class="fas fa-shopping-cart" style="font-size:2rem; display:block; margin-bottom:8px; opacity:0.3;"></i>Giỏ hàng trống</td></tr>';
@@ -1715,15 +1856,18 @@
 			document.getElementById('grandTotal').innerText = total.toLocaleString();
 		}
 
-		function removeCart(idx) { cart.splice(idx, 1); renderCart(); }
+		function removeCart(idx) {
+			const tab = getActiveTab();
+			if (tab) { tab.cart.splice(idx, 1); renderCart(); renderCartTabs(); }
+		}
 
 		function printInvoice() {
-			const name = document.getElementById('custName').value.trim();
-			const phone = document.getElementById('custPhone').value.trim();
-
-			// 1. Tính toán điểm mới (Điểm cũ + Điểm cộng thêm)
-			const oldPts = parseFloat(document.getElementById('oldPoints').innerText.replace(/,/g, '')) || 0;
-			const plusPts = parseFloat(document.getElementById('plusPoints').value) || 0;
+			const tab = getActiveTab();
+			const cart = tab ? tab.cart : [];
+			const name = tab ? tab.name : '';
+			const phone = tab ? tab.phone : '';
+			const oldPts = tab ? tab.oldPoints : 0;
+			const plusPts = tab ? tab.plusPoints : 0;
 			const newTotalPts = oldPts + plusPts;
 
 			// 2. Đổ thông tin chung
@@ -1867,45 +2011,45 @@
 
 		async function handleCheckout() {
 			const searchInput = document.getElementById('searchProd');
-
-			// 1. Kiểm tra "gác cổng": Nếu ô tìm kiếm còn chữ thì dừng lại
-			if (searchInput.value.trim() !== "") {
-				alert("⚠️ QUÊN THÊM SẢN PHẨM VÀO GIỎ HÀNG RỒI BẠN!");
-				searchInput.focus();
-				return;
+			if (searchInput.value.trim() !== '') {
+				alert('⚠️ QUÊN THÊM SẢN PHẨM VÀO GIỎ HÀNG RỒI BẠN!');
+				searchInput.focus(); return;
 			}
-
-			const tableRows = document.querySelectorAll('#cartBody tr');
-			if (tableRows.length === 0) {
-				alert("Giỏ hàng đang trống!");
-				return false;
-			}
-
-			const vnfirm = confirm("Bạn có chắc chắn muốn THANH TOÁN hóa đơn này không?");
-			if (!vnfirm) return; // Nếu chọn Cancel thì dừng lại luôn
-
-			// 2. Thực hiện lưu dữ liệu vào Google Sheets
+			const tab = getActiveTab();
+			if (!tab || tab.cart.length === 0) { alert('Giỏ hàng đang trống!'); return; }
+			if (!confirm('Bạn có chắc chắn muốn THANH TOÁN hóa đơn này không?')) return;
+			saveActiveTabState();
 			const thanhCong = await saveAll();
-
-			// 3. Nếu lưu thành công, kích hoạt hàm in ngay lập tức
 			if (thanhCong === true) {
-				// Gọi hàm in luôn, không hỏi confirm nữa
 				printInvoice();
+				// Xóa tab hiện tại sau khi thanh toán
 				setTimeout(() => {
-					location.reload(); // Làm mới trang để xóa sạch giỏ hàng
-				}, 500);
+					cartTabs = cartTabs.filter(t => t.id !== activeTabId);
+					if (cartTabs.length === 0) {
+						const first = createTab();
+						cartTabs = [first];
+						activeTabId = first.id;
+					} else {
+						activeTabId = cartTabs[0].id;
+					}
+					restoreTabState(getActiveTab());
+					renderCartTabs();
+					// reload lại danh sách khách hàng để cập nhật điểm mới
+					loadCustomers();
+				}, 600);
 			}
 		}
 
 		async function saveAll() {
 			const overlay = document.getElementById('loadingOverlay');
 			if (overlay) overlay.style.display = 'flex';
-
-			const phone = document.getElementById('custPhone').value.trim();
-			const name = document.getElementById('custName').value.trim();
-			const oldPts = parseFloat(document.getElementById('oldPoints').innerText.replace(/,/g, '')) || 0;
-			const plusPts = parseFloat(document.getElementById('plusPoints').value) || 0;
+			const tab = getActiveTab();
+			const phone = tab.phone.trim();
+			const name = tab.name.trim();
+			const oldPts = tab.oldPoints || 0;
+			const plusPts = tab.plusPoints || 0;
 			const finalPts = oldPts + plusPts;
+			const cart = tab.cart;
 
 			const invoiceID = "HD" + Date.now().toString().slice(-6);
 			const d = new Date();
