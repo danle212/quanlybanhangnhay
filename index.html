@@ -1361,7 +1361,7 @@
 
 			// 2. Điền dữ liệu vào form
 			// Lưu ý: Tìm sản phẩm trong mảng 'products' để lấy mã vạch nếu có
-			const p = products.find(item => item.name === selected.n);
+			const p = products.find(item => item.name === selected.n && item.unit === selected.u);
 
 			document.getElementById('newProdCode').value = p ? p.code : "";
 			document.getElementById('newProdName').value = selected.n;
@@ -1641,11 +1641,9 @@
 				// Luồng Sửa: Xác nhận cập nhật
 				if (!confirm(`Xác nhận cập nhật thông tin cho sản phẩm: ${name}?`)) return;
 			} else {
-				// Luồng Thêm mới: Nếu trùng mã thì hỏi thay thế
+				// Luồng Thêm mới: Nếu trùng mã thì chặn
 				if (isExisted) {
-					if (!confirm("Mã sản phẩm này đã tồn tại! Bạn có muốn CẬP NHẬT (thay thế) thông tin cũ không?")) {
-						return;
-					}
+					return alert(`❌ Mã sản phẩm "${code}" đã tồn tại! Vui lòng dùng mã khác hoặc dùng chức năng SỬA để cập nhật.`);
 				} else {
 					if (!confirm(`Xác nhận thêm sản phẩm mới: ${name}?`)) return;
 				}
