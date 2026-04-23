@@ -1876,10 +1876,28 @@
 			} else {
 				document.getElementById('cartBody').innerHTML = cart.map((i, idx) => {
 					total += i.t;
-					return `<tr><td>${i.n}</td><td class="cart-th-dvt">${i.u}</td><td class="cart-th-gia">${i.p.toLocaleString()}</td><td>${i.q}</td><td>${i.t.toLocaleString()}</td><td onclick="removeCart(${idx})" style="color:red; cursor:pointer;"><i class="fas fa-times"></i></td></tr>`;
+					return `<tr>
+						<td>${i.n}</td>
+						<td class="cart-th-dvt">${i.u}</td>
+						<td class="cart-th-gia">${i.p.toLocaleString()}</td>
+						<td><input type="number" value="${i.q}" min="0.1" step="any" onchange="updateCartQty(${idx}, this.value)" style="width:60px; text-align:center; background:var(--input-bg); border:1px solid var(--border); color:white; border-radius:4px; padding:4px 6px;"></td>
+						<td id="cart-total-${idx}">${i.t.toLocaleString()}</td>
+						<td onclick="removeCart(${idx})" style="color:red; cursor:pointer;"><i class="fas fa-times"></i></td>
+					</tr>`;
 				}).join('');
 			}
 			document.getElementById('grandTotal').innerText = total.toLocaleString();
+		}
+
+		function updateCartQty(idx, val) {
+			const tab = getActiveTab();
+			if (!tab) return;
+			const qty = parseFloat(val) || 0;
+			if (qty <= 0) { tab.cart.splice(idx, 1); renderCart(); renderCartTabs(); return; }
+			tab.cart[idx].q = qty;
+			tab.cart[idx].t = tab.cart[idx].p * qty;
+			renderCart();
+			renderCartTabs();
 		}
 
 		function removeCart(idx) {
