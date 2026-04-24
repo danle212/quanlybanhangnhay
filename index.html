@@ -782,6 +782,7 @@
 					<div style="display: flex; gap: 5px; position: relative;">
 						<input type="text" id="custPhone" style="width: 130px;" placeholder="09xxx..." oninput="searchCustomer()" autocomplete="off">
 						<button class="btn" style="padding: 0 12px;" onclick="checkCustomer()"><i class="fas fa-search"></i></button>
+						<button class="btn btn-outline" style="padding: 0 10px;" title="Làm mới danh sách khách" onclick="reloadCustomers()"><i class="fas fa-sync-alt"></i></button>
 						<div id="custPhoneRes" style="display:none; position:absolute; top:100%; left:0; width:220px; background:#2c2c2c; border:1px solid var(--primary); border-radius:0 0 8px 8px; z-index:999; max-height:200px; overflow-y:auto; box-shadow:0 10px 20px rgba(0,0,0,0.5);"></div>
 					</div>
 					<span id="loadCheckCust" class="loader-inline">⏳ Đang tìm...</span>
@@ -1429,8 +1430,14 @@
 			if (val.length < 2) { res.style.display = 'none'; return; }
 			const tokens = normalizeText(val).split(' ').filter(Boolean);
 			const matches = customers.filter(c => {
-				const nameParts = normalizeText(c.name || '').split(' ');
-				return tokens.every(t => nameParts.some(w => w.startsWith(t)));
+				const normName = normalizeText(c.name || '');
+				return tokens.every(t => normName.split(' ').includes(t) || normName.includes(t));
+			}).sort((a, b) => {
+				const na = normalizeText(a.name || '');
+				const nb = normalizeText(b.name || '');
+				const exactA = tokens.every(t => na.split(' ').includes(t));
+				const exactB = tokens.every(t => nb.split(' ').includes(t));
+				return exactB - exactA;
 			}).slice(0, 20);
 			if (!matches.length) { res.style.display = 'none'; return; }
 			res.innerHTML = matches.map(c => `
@@ -1449,6 +1456,13 @@
 			document.getElementById('oldPoints').innerText = points.toLocaleString();
 			document.getElementById('custPhoneRes').style.display = 'none';
 			document.getElementById('custNameRes').style.display = 'none';
+		}
+
+		async function reloadCustomers() {
+			const btn = document.querySelector('[onclick="reloadCustomers()"]');
+			if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-sync-alt fa-spin"></i>'; }
+			await loadCustomers();
+			if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-sync-alt"></i>'; }
 		}
 
 		document.addEventListener('click', function(e) {
