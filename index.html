@@ -141,11 +141,11 @@
 		.btn-success {
 			background: linear-gradient(135deg, #1db954, #17a045);
 			color: #fff;
-			box-shadow: 0 4px 15px rgba(29,185,84,0.3);
+			box-shadow: 0 4px 15px rgba(29, 185, 84, 0.3);
 		}
 
 		.btn-success:hover {
-			box-shadow: 0 6px 20px rgba(29,185,84,0.45);
+			box-shadow: 0 6px 20px rgba(29, 185, 84, 0.45);
 			transform: translateY(-1px);
 		}
 
@@ -189,12 +189,14 @@
 			border: 1px solid var(--border);
 			border-radius: 8px;
 			min-width: 160px;
-			box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+			box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
 			z-index: 9999;
 			overflow: hidden;
 		}
 
-		.account-dropdown.open { display: block; }
+		.account-dropdown.open {
+			display: block;
+		}
 
 		.account-dropdown-item {
 			padding: 12px 18px;
@@ -207,21 +209,28 @@
 			transition: background 0.15s;
 		}
 
-		.account-dropdown-item:hover { background: #3d3d3d; }
-		.account-dropdown-item.danger { color: #ff6b6b; }
+		.account-dropdown-item:hover {
+			background: #3d3d3d;
+		}
+
+		.account-dropdown-item.danger {
+			color: #ff6b6b;
+		}
 
 		/* Modal tài khoản */
 		.modal-overlay {
 			display: none;
 			position: fixed;
 			inset: 0;
-			background: rgba(0,0,0,0.75);
+			background: rgba(0, 0, 0, 0.75);
 			z-index: 99998;
 			align-items: center;
 			justify-content: center;
 		}
 
-		.modal-overlay.open { display: flex; }
+		.modal-overlay.open {
+			display: flex;
+		}
 
 		.modal-panel {
 			background: #1e1e1e;
@@ -229,7 +238,7 @@
 			border-radius: 12px;
 			padding: 28px 24px;
 			width: min(420px, calc(100% - 32px));
-			box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+			box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
 		}
 
 		.modal-panel h3 {
@@ -267,6 +276,52 @@
 			gap: 10px;
 			margin-top: 20px;
 			justify-content: flex-end;
+		}
+
+		.modal {
+			display: none;
+			/* Mặc định ẩn */
+			position: fixed;
+			z-index: 9999;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0, 0, 0, 0.8);
+			justify-content: center;
+			align-items: center;
+		}
+
+		.modal-content {
+			background-color: var(--card);
+			padding: 20px;
+			border-radius: 12px;
+			width: 90%;
+			max-width: 500px;
+			border: 1px solid var(--border);
+		}
+
+		.pipi-grid {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 12px;
+			margin-top: 15px;
+		}
+
+		.pipi-grid label {
+			display: block;
+			font-size: 12px;
+			margin-bottom: 4px;
+			color: #aaa;
+		}
+
+		.pipi-grid input {
+			width: 100%;
+			padding: 8px;
+			background: var(--input-bg);
+			border: 1px solid var(--border);
+			color: white;
+			border-radius: 4px;
 		}
 
 		table {
@@ -511,25 +566,47 @@
 		}
 
 		@media (max-width: 760px) {
-			body { padding: 10px; }
+			body {
+				padding: 10px;
+			}
 
-			.container { max-width: none; padding: 0; }
+			.container {
+				max-width: none;
+				padding: 0;
+			}
 
-			.tabs { flex-wrap: nowrap; gap: 0; padding: 0; }
+			.tabs {
+				flex-wrap: nowrap;
+				gap: 0;
+				padding: 0;
+			}
 
-			.store-name { font-size: 0.85rem; padding: 8px 6px; }
+			.store-name {
+				font-size: 0.85rem;
+				padding: 8px 6px;
+			}
 
-			.tabs-nav { gap: 2px; }
+			.tabs-nav {
+				gap: 2px;
+			}
 
-			.tab { font-size: 0; padding: 10px 10px; gap: 0; }
-			.tab i { font-size: 1.1rem; }
+			.tab {
+				font-size: 0;
+				padding: 10px 10px;
+				gap: 0;
+			}
+
+			.tab i {
+				font-size: 1.1rem;
+			}
 
 			.box {
 				flex-direction: column;
 				align-items: stretch;
 			}
 
-			.box>*, .input-group {
+			.box>*,
+			.input-group {
 				flex: 1 1 100% !important;
 				width: 100% !important;
 				min-width: 0;
@@ -546,7 +623,9 @@
 				width: auto !important;
 			}
 
-			.btn-outline { width: 100%; }
+			.btn-outline {
+				width: 100%;
+			}
 
 			.search-item {
 				flex-direction: column;
@@ -554,25 +633,41 @@
 				gap: 6px;
 			}
 
-			table, .detail-row table { width: 100%; min-width: 0; }
+			table,
+			.detail-row table {
+				width: 100%;
+				min-width: 0;
+			}
 
-			th, td {
+			th,
+			td {
 				padding: 8px 6px;
 				font-size: 0.82rem;
 				word-break: break-word;
 			}
 
-			.detail-row { overflow-x: auto; }
+			.detail-row {
+				overflow-x: auto;
+			}
 
-			.btn-view { padding: 6px 8px; font-size: 0.72rem; }
+			.btn-view {
+				padding: 6px 8px;
+				font-size: 0.72rem;
+			}
 
 			#loginOverlay .login-panel {
 				width: min(100%, 95vw);
 				padding: 22px 16px;
 			}
 
-			.stat-summary-container { flex-wrap: wrap; }
-			.stat-card { flex: 1 1 calc(50% - 8px); min-width: 0; }
+			.stat-summary-container {
+				flex-wrap: wrap;
+			}
+
+			.stat-card {
+				flex: 1 1 calc(50% - 8px);
+				min-width: 0;
+			}
 		}
 
 		.barcode-item {
@@ -602,7 +697,7 @@
 			background: var(--card);
 			border-radius: 8px;
 			padding: 12px 20px;
-			box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 			border-left: 4px solid #2ecc71;
 			min-width: 0;
 			flex: 1 1 180px;
@@ -632,8 +727,13 @@
 		}
 
 		@media (max-width: 420px) {
-			.stat-card { flex-basis: 100%; }
-			.stat-value { font-size: 18px; }
+			.stat-card {
+				flex-basis: 100%;
+			}
+
+			.stat-value {
+				font-size: 18px;
+			}
 		}
 
 		.skeleton {
@@ -643,9 +743,15 @@
 			border-radius: 4px;
 			height: 18px;
 		}
+
 		@keyframes shimmer {
-			0% { background-position: 200% 0; }
-			100% { background-position: -200% 0; }
+			0% {
+				background-position: 200% 0;
+			}
+
+			100% {
+				background-position: -200% 0;
+			}
 		}
 
 		.cart-tabs-bar {
@@ -685,7 +791,9 @@
 			line-height: 1;
 		}
 
-		.cart-tab-btn .close-tab:hover { color: #ff6b6b; }
+		.cart-tab-btn .close-tab:hover {
+			color: #ff6b6b;
+		}
 
 		.add-cart-tab {
 			padding: 6px 12px;
@@ -699,7 +807,9 @@
 			transition: 0.2s;
 		}
 
-		.add-cart-tab:hover { background: #252525; }
+		.add-cart-tab:hover {
+			background: #252525;
+		}
 
 		.cart-empty {
 			text-align: center;
@@ -710,12 +820,176 @@
 		}
 
 		@media (max-width: 760px) {
+
 			#cartBody td:nth-child(2),
 			#cartBody th:nth-child(2),
-			#cartHead th:nth-child(2) { display: none; }
+			#cartHead th:nth-child(2) {
+				display: none;
+			}
+
 			#cartBody td:nth-child(3),
-			#cartHead th:nth-child(3) { display: none; }
-			.cart-th-dvt, .cart-th-gia { display: none; }
+			#cartHead th:nth-child(3) {
+				display: none;
+			}
+
+			.cart-th-dvt,
+			.cart-th-gia {
+				display: none;
+			}
+		}
+
+		/* Layout cho Modal PiPi */
+		.pipi-form-grid {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			/* Chia 2 cột đều nhau */
+			column-gap: 20px;
+			/* Khoảng cách giữa các cột (chiều ngang) */
+			row-gap: 15px;
+			/* Khoảng cách giữa các hàng (chiều dọc) */
+			margin-top: 10px;
+		}
+
+		.pipi-field {
+			display: flex;
+			flex-direction: column;
+		}
+
+		.pipi-field label {
+			font-size: 12px;
+			color: #aaa;
+			margin-bottom: 6px;
+			font-weight: 500;
+		}
+
+		.pipi-field input {
+			width: 100%;
+			padding: 10px 12px;
+			/* Tăng đệm bên trong để chữ không sát viền */
+			background: #252525;
+			border: 1px solid #444;
+			color: white;
+			border-radius: 8px;
+			font-size: 14px;
+			box-sizing: border-box;
+		}
+
+		.pipi-highlight-box {
+			background: rgba(163, 116, 219, 0.05);
+			padding: 12px;
+			border-radius: 10px;
+			border: 1px solid rgba(163, 116, 219, 0.2);
+		}
+
+		.pipi-field input:focus {
+			border-color: var(--primary);
+			outline: none;
+		}
+
+		/* Các ô tự động tính toán */
+		.pipi-field input[readonly] {
+			background: #1a1a1a;
+			border-color: #333;
+			color: var(--secondary);
+			font-weight: bold;
+			cursor: not-allowed;
+		}
+
+		/* Hiệu ứng loading overlay */
+		.pipi-loading-overlay {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba(18, 18, 18, 0.8);
+			display: none;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			z-index: 100;
+			border-radius: 12px;
+			backdrop-filter: blur(2px);
+		}
+
+		.pipi-spinner {
+			width: 35px;
+			height: 35px;
+			border: 4px solid rgba(163, 116, 219, 0.2);
+			border-top: 4px solid var(--primary);
+			border-radius: 50%;
+			animation: pipi-spin 1s linear infinite;
+			margin-bottom: 12px;
+		}
+
+		@keyframes pipi-spin {
+			0% {
+				transform: rotate(0deg);
+			}
+
+			100% {
+				transform: rotate(360deg);
+			}
+		}
+
+		/* Container chứa bảng */
+		.pipi-table-wrapper {
+			width: 100%;
+			overflow-x: auto;
+			margin-top: 15px;
+			border: 1px solid #444;
+			border-radius: 8px;
+		}
+
+		/* Cấu trúc bảng */
+		.pipi-table {
+			width: 100%;
+			border-collapse: collapse;
+			min-width: 1200px;
+			/* Đảm bảo đủ không gian cho 12 cột */
+			table-layout: fixed;
+			/* Cực kỳ quan trọng để cột tiêu đề và nội dung thẳng hàng */
+		}
+
+		.pipi-table th,
+		.pipi-table td {
+			padding: 12px 8px;
+			border-bottom: 1px solid #333;
+			text-align: left;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+
+		.pipi-table th {
+			background-color: #2a2a2a;
+			color: #00e676;
+			position: sticky;
+			top: 0;
+			z-index: 10;
+		}
+
+		/* Định độ rộng cụ thể cho từng cột để tránh bị lệch */
+		.pipi-table .col-date {
+			width: 100px;
+		}
+
+		.pipi-table .col-num {
+			width: 110px;
+		}
+
+		.pipi-table .col-total {
+			width: 130px;
+			font-weight: bold;
+		}
+
+		.pipi-table .col-note {
+			width: 150px;
+		}
+
+		.pipi-table .col-action {
+			width: 80px;
+			text-align: center;
 		}
 	</style>
 </head>
@@ -737,12 +1011,15 @@
 				<div class="input-group">
 					<label>Mật khẩu</label>
 					<div style="position:relative;">
-						<input type="password" id="loginPass" placeholder="••••••" autocomplete="current-password" style="width:100%; box-sizing:border-box; padding-right:40px;">
-						<i class="fas fa-eye" id="loginPassEye" onclick="toggleLoginPass()" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; color:#aaa;"></i>
+						<input type="password" id="loginPass" placeholder="••••••" autocomplete="current-password"
+							style="width:100%; box-sizing:border-box; padding-right:40px;">
+						<i class="fas fa-eye" id="loginPassEye" onclick="toggleLoginPass()"
+							style="position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; color:#aaa;"></i>
 					</div>
 				</div>
 				<button type="submit" class="btn" id="loginBtn">Đăng nhập</button>
-				<div id="loginLoading" style="display:none; text-align:center; margin-top:12px; color:#03dac6; font-size:0.9rem;">
+				<div id="loginLoading"
+					style="display:none; text-align:center; margin-top:12px; color:#03dac6; font-size:0.9rem;">
 					<i class="fas fa-spinner fa-spin"></i> Đang xác thực...
 				</div>
 			</form>
@@ -753,27 +1030,33 @@
 	<div class="container">
 		<div class="tabs">
 			<div style="display:flex; align-items:center; gap:20px;">
-				<div class="store-name"><i class="fas fa-store" style="margin-right:6px;"></i><span id="storeNameDisplay">Cửa hàng</span></div>
+				<div class="store-name"><i class="fas fa-store" style="margin-right:6px;"></i><span
+						id="storeNameDisplay">Cửa hàng</span></div>
 				<div class="tabs-nav">
-					<div class="tab active" onclick="showTab(this, 'banhang')"><i class="fas fa-shopping-cart"></i> <span>BÁN HÀNG</span></div>
-					<div class="tab" onclick="showTab(this, 'thongke')"><i class="fas fa-chart-bar"></i> <span>THỐNG KÊ</span></div>
-					<div class="tab" onclick="showTab(this, 'pipi')"><i class="fas fa-coins"></i> <span>Doanh Thu PiPi</span></div>
-					<div class="tab" onclick="showTab(this, 'caidat')"><i class="fas fa-cog"></i> <span>HỆ THỐNG</span></div>
+					<div class="tab active" onclick="showTab(this, 'banhang')"><i class="fas fa-shopping-cart"></i>
+						<span>BÁN HÀNG</span>
+					</div>
+					<div class="tab" onclick="showTab(this, 'thongke')"><i class="fas fa-chart-bar"></i> <span>THỐNG
+							KÊ</span></div>
+					<div class="tab" onclick="showTab(this, 'pipi')"><i class="fas fa-coins"></i> <span>Doanh Thu
+							PiPi</span></div>
+					<div class="tab" onclick="showTab(this, 'caidat')"><i class="fas fa-cog"></i> <span>HỆ THỐNG</span>
+					</div>
 				</div>
 			</div>
 			<div id="accountMenuWrap" class="account-menu-wrap">
-			<button class="account-icon-btn" onclick="toggleAccountMenu(event)" title="Tài khoản">
-				<i class="fas fa-user"></i>
-			</button>
-			<div id="accountDropdown" class="account-dropdown">
-				<div class="account-dropdown-item" onclick="openProfileModal()">
-					<i class="fas fa-id-card"></i> Tài khoản
-				</div>
-				<div class="account-dropdown-item danger" onclick="logout()">
-					<i class="fas fa-sign-out-alt"></i> Đăng xuất
+				<button class="account-icon-btn" onclick="toggleAccountMenu(event)" title="Tài khoản">
+					<i class="fas fa-user"></i>
+				</button>
+				<div id="accountDropdown" class="account-dropdown">
+					<div class="account-dropdown-item" onclick="openProfileModal()">
+						<i class="fas fa-id-card"></i> Tài khoản
+					</div>
+					<div class="account-dropdown-item danger" onclick="logout()">
+						<i class="fas fa-sign-out-alt"></i> Đăng xuất
+					</div>
 				</div>
 			</div>
-		</div>
 		</div>
 
 		<div id="banhang" class="section active">
@@ -786,21 +1069,30 @@
 				<div class="input-group">
 					<label>Số điện thoại</label>
 					<div style="display: flex; gap: 5px; position: relative;">
-						<input type="text" id="custPhone" style="width: 130px;" placeholder="09xxx..." oninput="searchCustomer()" autocomplete="off">
-						<button class="btn" style="padding: 0 12px;" onclick="checkCustomer()"><i class="fas fa-search"></i></button>
-						<button class="btn btn-outline" style="padding: 0 10px;" title="Làm mới danh sách khách" onclick="reloadCustomers()"><i class="fas fa-sync-alt"></i></button>
-						<div id="custPhoneRes" style="display:none; position:absolute; top:100%; left:0; width:220px; background:#2c2c2c; border:1px solid var(--primary); border-radius:0 0 8px 8px; z-index:999; max-height:200px; overflow-y:auto; box-shadow:0 10px 20px rgba(0,0,0,0.5);"></div>
+						<input type="text" id="custPhone" style="width: 130px;" placeholder="09xxx..."
+							oninput="searchCustomer()" autocomplete="off">
+						<button class="btn" style="padding: 0 12px;" onclick="checkCustomer()"><i
+								class="fas fa-search"></i></button>
+						<button class="btn btn-outline" style="padding: 0 10px;" title="Làm mới danh sách khách"
+							onclick="reloadCustomers()"><i class="fas fa-sync-alt"></i></button>
+						<div id="custPhoneRes"
+							style="display:none; position:absolute; top:100%; left:0; width:220px; background:#2c2c2c; border:1px solid var(--primary); border-radius:0 0 8px 8px; z-index:999; max-height:200px; overflow-y:auto; box-shadow:0 10px 20px rgba(0,0,0,0.5);">
+						</div>
 					</div>
 					<span id="loadCheckCust" class="loader-inline">⏳ Đang tìm...</span>
 				</div>
 				<div class="input-group" style="position:relative;">
 					<label>Tên khách hàng</label>
-					<input type="text" id="custName" style="width: 180px;" placeholder="Tên khách" oninput="searchCustomerByName()" autocomplete="off">
-					<div id="custNameRes" style="display:none; position:absolute; top:100%; left:0; width:260px; background:#2c2c2c; border:1px solid var(--primary); border-radius:0 0 8px 8px; z-index:999; max-height:200px; overflow-y:auto; box-shadow:0 10px 20px rgba(0,0,0,0.5);"></div>
+					<input type="text" id="custName" style="width: 180px;" placeholder="Tên khách"
+						oninput="searchCustomerByName()" autocomplete="off">
+					<div id="custNameRes"
+						style="display:none; position:absolute; top:100%; left:0; width:260px; background:#2c2c2c; border:1px solid var(--primary); border-radius:0 0 8px 8px; z-index:999; max-height:200px; overflow-y:auto; box-shadow:0 10px 20px rgba(0,0,0,0.5);">
+					</div>
 				</div>
 				<div class="input-group">
 					<label>Điểm cũ</label>
-					<div style="background:var(--input-bg); border:1px solid var(--border); border-radius:4px; padding:10px 12px; line-height:1;">
+					<div
+						style="background:var(--input-bg); border:1px solid var(--border); border-radius:4px; padding:10px 12px; line-height:1;">
 						<span id="oldPoints" style="color:#ffd700; font-weight:bold; font-size:0.9rem;">0</span>
 					</div>
 				</div>
@@ -857,7 +1149,13 @@
 						<th>Xóa</th>
 					</tr>
 				</thead>
-				<tbody id="cartBody"><tr><td colspan="6" class="cart-empty"><i class="fas fa-shopping-cart" style="font-size:2rem; display:block; margin-bottom:8px; opacity:0.3;"></i>Giỏ hàng trống</td></tr></tbody>
+				<tbody id="cartBody">
+					<tr>
+						<td colspan="6" class="cart-empty"><i class="fas fa-shopping-cart"
+								style="font-size:2rem; display:block; margin-bottom:8px; opacity:0.3;"></i>Giỏ hàng
+							trống</td>
+					</tr>
+				</tbody>
 			</table>
 
 			<div
@@ -909,35 +1207,35 @@
 		</div>
 
 		<div id="pipi" class="section">
-			<div class="box" style="flex-wrap: wrap; gap: 14px; align-items: flex-end;">
-				<button class="btn btn-success" onclick="openPiPiModal()"><i class="fas fa-plus"></i> THÊM HÔM NAY</button>
-				<span id="loadPiPiBalance" class="loader" style="display:none;"><i class="fas fa-spinner fa-spin"></i> Đang tải tiền mặt tồn...</span>
+			<div id="pipiLoadingOverlay"
+				style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; flex-direction:column; justify-content:center; align-items:center; color:white;">
+				<div class="spinner"
+					style="border: 4px solid #f3f3f3; border-top: 4px solid #00e676; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite;">
+				</div>
+				<p style="margin-top:10px;">Đang tải dữ liệu PiPi...</p>
+			</div>
+			<div class="box" style="gap: 14px; align-items: flex-end;">
+				<button class="btn btn-success" onclick="openPiPiModal()">
+					<i class="fas fa-plus"></i> THÊM
+				</button>
 			</div>
 
-			<div class="stat-summary-container" style="display:flex; margin-top: 10px;">
-				<div class="stat-card">
-					<span class="stat-label">Tổng</span>
-					<span id="pipiTotalSum" class="stat-value">0</span>
+			<div class="stat-summary-container" style="display: flex; gap: 15px; margin: 15px 0;">
+				<div class="stat-card" style="flex:1; background: var(--card); padding: 15px; border-radius: 8px;">
+					<div style="font-size: 12px; color: #888;">TỔNG DOANH THU</div>
+					<div id="statPiPiTong" style="font-size: 18px; font-weight: bold; color: var(--secondary);">0</div>
 				</div>
-				<div class="stat-card">
-					<span class="stat-label">Tiền mặt</span>
-					<span id="pipiCashSum" class="stat-value">0</span>
+				<div class="stat-card" style="flex:1; background: var(--card); padding: 15px; border-radius: 8px;">
+					<div style="font-size: 12px; color: #888;">TỔNG NHẬP Ý</div>
+					<div id="statPiPiTienY" style="font-size: 18px; font-weight: bold;">0</div>
 				</div>
-				<div class="stat-card">
-					<span class="stat-label">Chuyển khoản</span>
-					<span id="pipiTransferSum" class="stat-value">0</span>
-				</div>
-				<div class="stat-card">
-					<span class="stat-label">Chuyển khoản Ý</span>
-					<span id="pipiTransferYSum" class="stat-value">0</span>
-				</div>
-				<div class="stat-card blue">
-					<span class="stat-label">Tiền mặt tồn hiện tại</span>
-					<span id="pipiCashBalance" class="stat-value">0</span>
+				<div class="stat-card" style="flex:1; background: var(--card); padding: 15px; border-radius: 8px;">
+					<div style="font-size: 12px; color: #888;">TỔNG TỒN MẶT</div>
+					<div id="statPiPiTonTM" style="font-size: 18px; font-weight: bold; color: var(--primary);">0</div>
 				</div>
 			</div>
 
-			<div class="box" style="flex-wrap: wrap; gap: 14px; align-items: flex-end; margin-top: 10px;">
+			<div class="box" style="gap: 14px; align-items: flex-end; margin-bottom: 15px;">
 				<div class="input-group">
 					<label>Từ ngày</label>
 					<input type="date" id="pipiStartDate">
@@ -946,18 +1244,42 @@
 					<label>Đến ngày</label>
 					<input type="date" id="pipiEndDate">
 				</div>
-				<button class="btn" id="btnPiPiFilter" onclick="filterPiPi()"><i class="fas fa-filter"></i> XEM CHI TIẾT</button>
-				<span id="loadPiPi" class="loader" style="display:none;"><i class="fas fa-spinner fa-spin"></i> Đang tải...</span>
+				<button class="btn" id="btnPiPiFilter" onclick="filterPiPi()">
+					<i class="fas fa-search"></i> XEM CHI TIẾT
+				</button>
+				<span id="loadPiPi" class="loader" style="display:none;"><i class="fas fa-spinner fa-spin"></i></span>
 			</div>
 
-			<div style="overflow-x:auto;">
-				<table id="pipiTable">
-					<thead id="pipiHead"></thead>
-					<tbody id="pipiBody"></tbody>
+			<div class="pipi-table-wrapper"
+				style="width: 100%; overflow-x: auto; border: 1px solid #333; border-radius: 8px;">
+				<table class="pipi-table"
+					style="width: 100%; border-collapse: collapse; min-width: 1100px; table-layout: fixed;">
+					<thead>
+						<tr style="background: #2a2a2a; color: var(--secondary);">
+							<th style="width: 100px; padding: 12px;">Ngày</th>
+							<th style="width: 100px;">D.Thu Máy</th>
+							<th style="width: 100px;">Thu Khác</th>
+							<th style="width: 100px;">C.Khoản</th>
+							<th style="width: 100px;">Nhập Ý</th>
+							<th style="width: 100px;">Chi Phí</th>
+							<th style="width: 100px;">Lý Thuyết</th>
+							<th style="width: 100px;">Thực Tế</th>
+							<th style="width: 80px;">C.Lệch</th>
+							<th style="width: 120px;">Tổng Tồn</th>
+							<th style="width: 150px;">Ghi Chú</th>
+						</tr>
+					</thead>
+					<tbody id="pipiBody">
+						<tr>
+							<td colspan="11" style="text-align:center; padding: 30px; color: #666;">Nhấn "Xem chi tiết"
+								để hiển thị dữ liệu</td>
+						</tr>
+					</tbody>
 				</table>
-				<div id="pipiPageNavigation"></div>
 			</div>
 		</div>
+
+
 
 		<div id="caidat" class="section">
 			<div class="box" style="flex-direction: column; align-items: flex-start;">
@@ -966,9 +1288,12 @@
 					<h3 style="color: var(--secondary); margin: 0;"><i class="fas fa-plus-circle"></i> CHỈNH SỬA SẢN
 						PHẨM</h3>
 					<div style="display:flex; gap:10px;">
-						<button class="btn btn-success" onclick="exportProducts()"><i class="fas fa-file-export"></i> EXPORT</button>
-						<button class="btn btn-cyan" onclick="document.getElementById('importFileInput').click()"><i class="fas fa-file-import"></i> IMPORT</button>
-						<input type="file" id="importFileInput" accept=".xlsx,.xls,.csv" style="display:none" onchange="importProducts(event)">
+						<button class="btn btn-success" onclick="exportProducts()"><i class="fas fa-file-export"></i>
+							EXPORT</button>
+						<button class="btn btn-cyan" onclick="document.getElementById('importFileInput').click()"><i
+								class="fas fa-file-import"></i> IMPORT</button>
+						<input type="file" id="importFileInput" accept=".xlsx,.xls,.csv" style="display:none"
+							onchange="importProducts(event)">
 					</div>
 				</div>
 				<div style="display: flex; flex-wrap: wrap; gap: 15px; width: 100%;">
@@ -1067,8 +1392,10 @@
 			<div class="modal-field">
 				<label>Mật khẩu</label>
 				<div style="position:relative;">
-					<input type="password" id="profilePassword" disabled style="width:100%; box-sizing:border-box; padding-right:40px;">
-					<i class="fas fa-eye" onclick="togglePasswordView()" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; color:#aaa;"></i>
+					<input type="password" id="profilePassword" disabled
+						style="width:100%; box-sizing:border-box; padding-right:40px;">
+					<i class="fas fa-eye" onclick="togglePasswordView()"
+						style="position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; color:#aaa;"></i>
 				</div>
 			</div>
 			<div class="modal-actions">
@@ -1078,56 +1405,85 @@
 	</div>
 
 	<!-- Modal PiPi -->
-	<div id="pipiModal" class="modal-overlay">
-		<div class="modal-panel" style="width: min(680px, calc(100% - 32px));">
-			<h3><i class="fas fa-coins"></i> Thêm doanh thu PiPi</h3>
-			<div style="display:grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-				<div class="modal-field" style="grid-column: 1 / -1;">
-					<label>Ngày</label>
-					<input type="date" id="pipiDate">
+	<div id="pipiModal" class="modal">
+		<div class="modal-content" style="position: relative; max-width: 650px; padding: 30px; border-radius: 15px;">
+			<div id="pipiLoading" class="pipi-loading-overlay">
+				<div class="pipi-spinner"></div>
+				<span style="font-size: 13px; color: var(--primary);">Đang đồng bộ doanh thu...</span>
+			</div>
+
+			<h3 id="pipiModalTitle" style="color: var(--primary); margin: 0 0 20px 0; font-size: 1.5rem;">Quản Lý Doanh
+				Thu PiPi</h3>
+
+			<div id="pipiModalLoading"
+				style="display:none; position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:10; flex-direction:column; justify-content:center; align-items:center; border-radius:12px;">
+				<div class="spinner"
+					style="border: 4px solid #f3f3f3; border-top: 4px solid var(--secondary); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite;">
+				</div>
+				<p style="color:white; margin-top:10px;">Đang lưu dữ liệu...</p>
+			</div>
+
+			<div class="pipi-form-grid">
+				<div class="pipi-field">
+					<label><i class="fa fa-calendar"></i> Ngày</label>
+					<input type="date" id="pipiDate" onchange="fetchSalesRevenue()" onkeydown="return false">
+				</div>
+				<div class="pipi-field">
+					<label><i class="fa fa-desktop"></i> Doanh thu Máy</label>
+					<input type="number" id="pipiDoanhThu" readonly>
 				</div>
 
-				<div class="modal-field">
-					<label>Tổng</label>
-					<input type="number" id="pipiTong" placeholder="0">
+				<div class="pipi-field">
+					<label>Thu khác (+)</label>
+					<input type="number" id="pipiThuKhac" value="0" oninput="calculatePiPiLogic()">
 				</div>
-				<div class="modal-field">
-					<label>Chuyển khoản</label>
-					<input type="number" id="pipiChuyenKhoan" placeholder="0">
+				<div class="pipi-field">
+					<label>Chuyển khoản (-)</label>
+					<input type="number" id="pipiCK" value="0" oninput="calculatePiPiLogic()">
 				</div>
-				<div class="modal-field">
-					<label>Tiền mặt</label>
-					<input type="number" id="pipiTienMat" placeholder="0" oninput="recalcPiPiComputedFields()">
+
+				<div class="pipi-field">
+					<label>Tiền nhập Ý (-)</label>
+					<input type="number" id="pipiCKY" value="0" oninput="calculatePiPiLogic()">
 				</div>
-				<div class="modal-field">
-					<label>Chuyển khoản Ý</label>
-					<input type="number" id="pipiChuyenKhoanY" placeholder="0">
+				<div class="pipi-field">
+					<label>Chi phí (-)</label>
+					<input type="number" id="pipiChiPhi" value="0" oninput="calculatePiPiLogic()">
 				</div>
-				<div class="modal-field">
-					<label>Chi phí</label>
-					<input type="number" id="pipiChiPhi" placeholder="0">
+
+				<div class="pipi-field pipi-highlight-box" style="border-color: rgba(3, 218, 198, 0.3);">
+					<label style="color: var(--secondary); font-weight: bold;">Tiền mặt lý thuyết</label>
+					<input type="number" id="pipiLyThuyet" readonly
+						style="background: transparent; border: none; font-size: 1.1rem;">
 				</div>
-				<div class="modal-field">
-					<label>Thu khác</label>
-					<input type="number" id="pipiThuKhac" placeholder="0" oninput="recalcPiPiComputedFields()">
+				<div class="pipi-field pipi-highlight-box" style="border-color: rgba(163, 116, 219, 0.4);">
+					<label style="color: var(--primary); font-weight: bold;">Tiền mặt thực tế</label>
+					<input type="number" id="pipiTM" value="0" oninput="calculatePiPiLogic()"
+						style="background: rgba(255,255,255,0.05); font-size: 1.1rem;">
 				</div>
-				<div class="modal-field">
-					<label>Tiền mặt trong ngày</label>
-					<input type="number" id="pipiTienMatTrongNgay" placeholder="0" readonly style="opacity:0.7; cursor:not-allowed;">
+
+				<div class="pipi-field">
+					<label>Chênh lệch (Thừa/Thiếu)</label>
+					<input type="number" id="pipiChenhLech" readonly>
 				</div>
-				<div class="modal-field">
-					<label>Tồn tiền mặt</label>
-					<input type="number" id="pipiTonTienMat" placeholder="0" readonly style="opacity:0.7; cursor:not-allowed;">
+				<div class="pipi-field">
+					<label>Tổng tồn mặt hiện tại</label>
+					<input type="number" id="pipiTonTM" readonly>
 				</div>
-				<div class="modal-field" style="grid-column: 1 / -1;">
+
+				<div class="pipi-field" style="grid-column: span 2;">
 					<label>Ghi chú</label>
-					<input type="text" id="pipiGhiChu" placeholder="...">
+					<input type="text" id="pipiGhiChu" placeholder="Nhập lý do chênh lệch hoặc chi tiết chi phí...">
 				</div>
 			</div>
-			<div class="modal-actions">
-				<span id="loadPiPiSave" class="loader" style="display:none; margin-right:auto;"><i class="fas fa-spinner fa-spin"></i> Đang lưu...</span>
-				<button class="btn" style="background:#555;" onclick="closePiPiModal()">Đóng</button>
-				<button class="btn btn-success" id="btnPiPiSave" onclick="savePiPiRow()">Lưu</button>
+
+			<div style="margin-top: 30px; text-align: right; display: flex; gap: 15px; justify-content: flex-end;">
+				<button class="btn-cancel" onclick="closePiPiModal()"
+					style="background: #333; color: #999; border: 1px solid #444; padding: 12px 25px; border-radius: 8px; cursor: pointer;">Hủy
+					bỏ</button>
+				<button id="btnSavePiPi" onclick="savePiPi()"
+					style="background: var(--primary); color: white; border: none; padding: 12px 35px; border-radius: 8px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 15px rgba(163, 116, 219, 0.3);">Lưu
+					dữ liệu</button>
 			</div>
 		</div>
 	</div>
@@ -1140,6 +1496,7 @@
 		<p style="color:white; margin-top:15px; font-family:sans-serif;">Đang xử lý, vui lòng đợi...</p>
 	</div>
 
+
 	<style>
 		@keyframes spin {
 			0% {
@@ -1151,6 +1508,8 @@
 			}
 		}
 	</style>
+
+
 
 	<script>
 		let APP_URL = localStorage.getItem('gs_v17_url') || "";
@@ -1394,8 +1753,55 @@
 			}
 			document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
 			document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-			el.classList.add('active'); document.getElementById(id).classList.add('active');
-			if (id === 'pipi') ensurePiPiLoaded();
+			el.classList.add('active');
+			document.getElementById(id).classList.add('active');
+
+			if (id === 'pipi') {
+				// Chỉ thiết lập ngày mặc định và lấy số dư nhanh, KHÔNG render bảng
+				initPiPiTab();
+			}
+		}
+
+		async function initPiPiTab() {
+			const overlay = document.getElementById('pipiLoadingOverlay');
+			if (overlay) {
+				overlay.style.display = 'flex';
+				// Lệnh cứu cánh: Sau 10 giây nếu vẫn quay thì tự tắt để người dùng còn thao tác
+				setTimeout(() => { if (overlay.style.display === 'flex') overlay.style.display = 'none'; }, 10000);
+			}
+
+			try {
+				console.log("Bắt đầu tải dữ liệu nhanh cho Summary...");
+
+				// 1. Thiết lập ngày mặc định
+				const startInput = document.getElementById('pipiStartDate');
+				const endInput = document.getElementById('pipiEndDate');
+				if (startInput && !startInput.value) {
+					const now = new Date();
+					startInput.value = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+					endInput.value = now.toISOString().split('T')[0];
+				}
+
+				// 2. Fetch dữ liệu
+				const response = await fetch(`${APP_URL}?action=get&type=PiPi`);
+				if (!response.ok) throw new Error("Network response was not ok");
+
+				const data = await response.json();
+				console.log("Dữ liệu nhận về:", data);
+
+				if (data && Array.isArray(data) && data.length > 1) {
+					const validRows = data.slice(1).filter(r => r[0] !== "");
+					pipiAllRows = validRows;
+					updatePiPiSummaryDisplay(validRows);
+				}
+
+			} catch (e) {
+				console.error("Lỗi trong initPiPiTab:", e);
+				alert("Không thể tải số dư đầu kỳ. Vui lòng kiểm tra kết nối mạng.");
+			} finally {
+				console.log("Tắt Loading Overlay");
+				if (overlay) overlay.style.display = 'none';
+			}
 		}
 
 		function clearProductInput() {
@@ -1418,7 +1824,7 @@
 			document.getElementById('accountDropdown').classList.toggle('open');
 		}
 
-		document.addEventListener('click', function() {
+		document.addEventListener('click', function () {
 			document.getElementById('accountDropdown')?.classList.remove('open');
 		});
 
@@ -1531,7 +1937,7 @@
 			const matches = customers.filter(c => c.phone.replace(/^0+/, '').includes(norm)).slice(0, 8);
 			if (!matches.length) { res.style.display = 'none'; return; }
 			res.innerHTML = matches.map(c => `
-				<div onmousedown="pickCustomer('${c.phone}','${c.name.replace(/'/g, "\\'")}',${ c.points})"
+				<div onmousedown="pickCustomer('${c.phone}','${c.name.replace(/'/g, "\\'")}',${c.points})"
 					style="padding:10px 14px; cursor:pointer; border-bottom:1px solid #3d3d3d; display:flex; justify-content:space-between; align-items:center;"
 					onmouseover="this.style.background='#3d3d3d'" onmouseout="this.style.background=''">
 					<span style="color:#fff; font-weight:bold;">${c.phone}</span>
@@ -1557,7 +1963,7 @@
 			}).slice(0, 20);
 			if (!matches.length) { res.style.display = 'none'; return; }
 			res.innerHTML = matches.map(c => `
-				<div onmousedown="pickCustomer('${c.phone}','${c.name.replace(/'/g, "\\'")}',${ c.points})"
+				<div onmousedown="pickCustomer('${c.phone}','${c.name.replace(/'/g, "\\'")}',${c.points})"
 					style="padding:10px 14px; cursor:pointer; border-bottom:1px solid #3d3d3d; display:flex; justify-content:space-between; align-items:center;"
 					onmouseover="this.style.background='#3d3d3d'" onmouseout="this.style.background=''">
 					<span style="color:#fff; font-weight:bold;">${c.name}</span>
@@ -1581,7 +1987,7 @@
 			if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-sync-alt"></i>'; }
 		}
 
-		document.addEventListener('click', function(e) {
+		document.addEventListener('click', function (e) {
 			if (!e.target.closest('#custPhoneRes') && e.target.id !== 'custPhone')
 				document.getElementById('custPhoneRes').style.display = 'none';
 			if (!e.target.closest('#custNameRes') && e.target.id !== 'custName')
@@ -1595,7 +2001,7 @@
 			event.target.value = ""; // reset để có thể chọn lại cùng file
 
 			const reader = new FileReader();
-			reader.onload = async function(e) {
+			reader.onload = async function (e) {
 				try {
 					const data = new Uint8Array(e.target.result);
 					const workbook = XLSX.read(data, { type: 'array' });
@@ -1684,7 +2090,7 @@
 					if (overlay) overlay.style.display = 'none';
 					alert(`Import hoàn tất!\n✅ Thành công: ${success}\n❌ Thất bại: ${failed}`);
 					await loadProducts();
-				} catch(err) {
+				} catch (err) {
 					document.getElementById('loadingOverlay').style.display = 'none';
 					alert("Lỗi đọc file: " + err.message);
 				}
@@ -2266,7 +2672,7 @@
 		function showStatSkeleton() {
 			const rows = Array(6).fill('').map(() => `
 				<tr>
-					${Array(5).fill('').map((_, i) => `<td><div class="skeleton" style="width:${[80,50,40,60,70][i]}%"></div></td>`).join('')}
+					${Array(5).fill('').map((_, i) => `<td><div class="skeleton" style="width:${[80, 50, 40, 60, 70][i]}%"></div></td>`).join('')}
 				</tr>`).join('');
 			document.getElementById('statHead').innerHTML = '';
 			document.getElementById('statBody').innerHTML = rows;
@@ -2494,58 +2900,26 @@
 			row.style.display = (row.style.display === 'table-row') ? 'none' : 'table-row';
 		}
 
-		// =========================
 		// PiPi (Doanh thu hằng ngày)
-		// =========================
-		const PIPI_SHEET_NAME = 'PiPi';
-		const PIPI_ADD_ACTION = 'addPiPi';
-		const PIPI_UPDATE_ACTION = 'updatePiPi';
-		let pipiLoadedOnce = false;
-		let pipiAllRows = []; // dữ liệu hiện đang hiển thị (sau fetch filter)
-		let pipiAllRowsCache = []; // cache full sheet để tính base balance khi edit
-		let pipiFilteredRows = [];
-		let pipiPage = 1;
-		let pipiRowsPerPage = 20;
-		let pipiCurrentCashBalance = 0; // tiền mặt tồn hiện tại (ngày mới nhất)
-		let pipiBaseCashBalanceForCalc = 0; // base tiền mặt tồn dùng để tính cho modal (add/edit)
+		let pipiAllRows = [];
 		let pipiEditMode = false;
-		let pipiEditDateKey = '';
 
-		function parsePiPiDate(val) {
-			if (val === null || val === undefined) return null;
-			if (val instanceof Date && !isNaN(val.getTime())) return val;
-			const s = String(val).trim();
-			if (!s) return null;
-
-			// yyyy-mm-dd or yyyy-mm-dd hh:mm:ss
-			const isoLike = s.match(/^(\d{4})-(\d{2})-(\d{2})(?:[ T].*)?$/);
-			if (isoLike) {
-				const d = new Date(`${isoLike[1]}-${isoLike[2]}-${isoLike[3]}T00:00:00`);
-				return isNaN(d.getTime()) ? null : d;
-			}
-
-			// dd/mm/yyyy or dd/mm/yyyy hh:mm
-			const vnLike = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:\s+.*)?$/);
-			if (vnLike) {
-				const dd = vnLike[1].padStart(2, '0');
-				const mm = vnLike[2].padStart(2, '0');
-				const yy = vnLike[3];
-				const d = new Date(`${yy}-${mm}-${dd}T00:00:00`);
-				return isNaN(d.getTime()) ? null : d;
-			}
-
-			// fallback
-			const d = new Date(s);
-			return isNaN(d.getTime()) ? null : d;
+		function getLocalDateKey(val) {
+			const d = new Date(val);
+			if (isNaN(d.getTime())) return '';
+			const y = d.getFullYear();
+			const m = String(d.getMonth() + 1).padStart(2, '0');
+			const dd = String(d.getDate()).padStart(2, '0');
+			return `${y}-${m}-${dd}`;
 		}
 
-		function formatPiPiDate(val) {
-			const d = parsePiPiDate(val);
-			if (!d) return '';
+		function formatDisplayDate(val) {
+			const d = new Date(val);
+			if (isNaN(d.getTime())) return String(val);
 			const dd = String(d.getDate()).padStart(2, '0');
 			const mm = String(d.getMonth() + 1).padStart(2, '0');
-			const yy = d.getFullYear();
-			return `${dd}/${mm}/${yy}`;
+			const yyyy = d.getFullYear();
+			return `${dd}/${mm}/${yyyy}`;
 		}
 
 		function toNumberSafe(v) {
@@ -2557,410 +2931,349 @@
 			return isNaN(n) ? 0 : n;
 		}
 
-		function getPiPiDateKey(val) {
-			const d = parsePiPiDate(val);
-			if (!d) return '';
-			const y = d.getFullYear();
-			const m = String(d.getMonth() + 1).padStart(2, '0');
-			const dd = String(d.getDate()).padStart(2, '0');
-			return `${y}-${m}-${dd}`;
-		}
-
-		async function ensurePiPiLoaded() {
-			if (pipiLoadedOnce) return;
-			await loadPiPiCurrentBalanceOnly();
-			pipiLoadedOnce = true;
-		}
-
-		async function loadPiPiRows(useDateParams = true) {
-			if (!APP_URL) throw new Error('Chưa cấu hình APP_URL');
-			let params = new URLSearchParams();
-			params.append('action', 'get');
-			params.append('type', PIPI_SHEET_NAME);
-
-			// Nếu backend hỗ trợ start/end thì gửi luôn để tối ưu, còn không thì vẫn filter client-side phía dưới.
-			if (useDateParams) {
-				const startV = document.getElementById('pipiStartDate').value;
-				const endV = document.getElementById('pipiEndDate').value;
-				if (startV && endV) { params.append('start', startV); params.append('end', endV); }
-			}
-
-			const finalUrl = `${APP_URL}?${params.toString()}`;
-			const r = await fetch(finalUrl, { redirect: 'follow' });
-			const d = await r.json();
-			return Array.isArray(d) ? d : [];
-		}
-
-		function applyPiPiFilter() {
-			const startV = document.getElementById('pipiStartDate').value;
-			const endV = document.getElementById('pipiEndDate').value;
-			let s = startV ? new Date(startV) : null;
-			let e = endV ? new Date(endV) : null;
-			if (s) s.setHours(0, 0, 0, 0);
-			if (e) e.setHours(23, 59, 59, 999);
-
-			let rows = [...pipiAllRows];
-			if (s && e) {
-				rows = rows.filter(r => {
-					const dt = parsePiPiDate(r[0]);
-					if (!dt) return false;
-					return dt >= s && dt <= e;
-				});
-			}
-
-			// sort desc by date
-			rows.sort((a, b) => {
-				const da = parsePiPiDate(a[0]) || new Date(0);
-				const db = parsePiPiDate(b[0]) || new Date(0);
-				return db - da;
-			});
-
-			pipiFilteredRows = rows;
-			pipiPage = 1;
-		}
-
-		function renderPiPiCurrentBalance(balance) {
-			document.getElementById('pipiCashBalance').innerText = (toNumberSafe(balance) || 0).toLocaleString();
-		}
-
-		function renderPiPiSummaryFromRows(rows) {
-			const list = Array.isArray(rows) ? rows : [];
-			let sumTong = 0, sumTienMat = 0, sumChuyenKhoan = 0, sumChuyenKhoanY = 0;
-			list.forEach(r => {
-				sumTong += toNumberSafe(r[1]);
-				sumChuyenKhoan += toNumberSafe(r[2]);
-				sumTienMat += toNumberSafe(r[3]);
-				sumChuyenKhoanY += toNumberSafe(r[4]);
-			});
-			const setText = (id, val) => {
-				const el = document.getElementById(id);
-				if (el) el.innerText = (toNumberSafe(val) || 0).toLocaleString();
-			};
-			setText('pipiTotalSum', sumTong);
-			setText('pipiCashSum', sumTienMat);
-			setText('pipiTransferSum', sumChuyenKhoan);
-			setText('pipiTransferYSum', sumChuyenKhoanY);
-		}
-
-		function recalcPiPiComputedFields() {
-			const cash = toNumberSafe(document.getElementById('pipiTienMat')?.value);
-			const other = toNumberSafe(document.getElementById('pipiThuKhac')?.value);
-			const cashInDay = cash + other; // Tiền mặt trong ngày = Tiền mặt + Thu khác
-			const balance = (toNumberSafe(pipiBaseCashBalanceForCalc) || 0) + cashInDay; // Tồn tiền mặt = base + tiền mặt trong ngày
-
-			const cashInDayEl = document.getElementById('pipiTienMatTrongNgay');
-			const balanceEl = document.getElementById('pipiTonTienMat');
-			if (cashInDayEl) cashInDayEl.value = cashInDay;
-			if (balanceEl) balanceEl.value = balance;
-
-			// Nếu đang thêm hôm nay, cập nhật ngay "tiền mặt tồn hiện tại" để người dùng thấy tồn mới
-			if (!pipiEditMode) renderPiPiCurrentBalance(balance);
-		}
-
-		async function loadPiPiCurrentBalanceOnly() {
-			if (!isLoggedIn()) { showLoginScreen(); return; }
-			const load = document.getElementById('loadPiPiBalance');
-			if (load) load.style.display = 'inline-block';
-
-			try {
-				// Load toàn bộ PiPi để lấy "tiền mặt tồn hiện tại" (ngày mới nhất)
-				const d = await loadPiPiRows(false);
-				const rows = (Array.isArray(d) && d.length > 1) ? d.slice(1) : [];
-				pipiAllRowsCache = rows.filter(r => Array.isArray(r) && r.some(cell => String(cell ?? '').trim() !== ''));
-				const sorted = [...pipiAllRowsCache].sort((a, b) => {
-					const da = parsePiPiDate(a[0]) || new Date(0);
-					const db = parsePiPiDate(b[0]) || new Date(0);
-					return db - da;
-				});
-				const mostRecent = sorted[0];
-				const cashBalance = mostRecent ? toNumberSafe(mostRecent[8]) : 0;
-				pipiCurrentCashBalance = cashBalance;
-				renderPiPiCurrentBalance(cashBalance);
-				renderPiPiSummaryFromRows(pipiAllRowsCache);
-
-				// Mặc định chưa lọc/không hiển thị bảng
-				document.getElementById('pipiHead').innerHTML = '';
-				document.getElementById('pipiBody').innerHTML = `<tr><td colspan="11" class="cart-empty">Chọn khoảng ngày và bấm XEM CHI TIẾT để xem chi tiết</td></tr>`;
-				document.getElementById('pipiPageNavigation').innerHTML = '';
-			} catch (e) {
-				console.error('Lỗi load PiPi balance:', e);
-				document.getElementById('pipiBody').innerHTML = `<tr><td colspan="11">Lỗi tải dữ liệu PiPi</td></tr>`;
-			} finally {
-				if (load) load.style.display = 'none';
-			}
-		}
-
-		function renderPiPiTable() {
-			document.getElementById('pipiHead').innerHTML = `
-				<tr>
-					<th>Ngày</th>
-					<th>Tổng</th>
-					<th>Chuyển khoản</th>
-					<th>Tiền mặt</th>
-					<th>Chuyển khoản Ý</th>
-					<th>Chi phí</th>
-					<th>Thu khác</th>
-					<th>Tiền mặt trong ngày</th>
-					<th>Tồn tiền mặt</th>
-					<th>Ghi chú</th>
-					<th>Thao tác</th>
-				</tr>`;
-
-			const start = (pipiPage - 1) * pipiRowsPerPage;
-			const end = start + pipiRowsPerPage;
-			const items = pipiFilteredRows.slice(start, end);
-
-			const tdNum = (v) => `<td style="text-align:right; color: var(--secondary); font-weight: 600;">${toNumberSafe(v).toLocaleString()}</td>`;
-
-			document.getElementById('pipiBody').innerHTML = items.length ? items.map(r => {
-				const dateKey = getPiPiDateKey(r[0]);
-				return `
-				<tr>
-					<td style="white-space:nowrap;">${formatPiPiDate(r[0])}</td>
-					${tdNum(r[1])}
-					${tdNum(r[2])}
-					${tdNum(r[3])}
-					${tdNum(r[4])}
-					${tdNum(r[5])}
-					${tdNum(r[6])}
-					${tdNum(r[7])}
-					${tdNum(r[8])}
-					<td style="max-width: 420px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${String(r[9] ?? '').replace(/"/g, '&quot;')}">${String(r[9] ?? '')}</td>
-					<td style="white-space:nowrap;">
-						<button class="btn-view" style="background:#ffd700; color:#333;" onclick="openPiPiEditModal('${dateKey}')"><i class="fas fa-pen"></i> Edit</button>
-					</td>
-				</tr>
-			`}).join('') : `<tr><td colspan="11" class="cart-empty">Không có dữ liệu</td></tr>`;
-
-			renderPiPiPagination();
-		}
-
-		function renderPiPiPagination() {
-			const totalPages = Math.ceil(pipiFilteredRows.length / pipiRowsPerPage);
-			const nav = document.getElementById('pipiPageNavigation');
-			if (!nav) return;
-			if (totalPages <= 1) { nav.innerHTML = ''; return; }
-
-			let options = "";
-			for (let i = 1; i <= totalPages; i++) {
-				options += `<option value="${i}" ${i === pipiPage ? 'selected' : ''}>Trang ${i}</option>`;
-			}
-
-			nav.innerHTML = `
-				<div style="display: flex; justify-content: center; align-items: center; gap: 10px; margin: 20px 0; padding: 10px; background: #252525; border-radius: 8px;">
-					<button onclick="changePiPiPage(-1)" ${pipiPage === 1 ? 'disabled' : ''} 
-						style="padding: 8px 12px; background: #444; color: white; border: none; border-radius: 5px; cursor: pointer;">
-						◄
-					</button>
-					<select onchange="goToPiPiPage(this.value)" 
-						style="padding: 8px; background: #333; color: #00ffd0; border: 1px solid #555; border-radius: 5px; font-weight: bold; outline: none;">
-						${options}
-					</select>
-					<span style="color: #888; font-size: 0.9em;"> / ${totalPages} </span>
-					<button onclick="changePiPiPage(1)" ${pipiPage === totalPages ? 'disabled' : ''} 
-						style="padding: 8px 12px; background: #444; color: white; border: none; border-radius: 5px; cursor: pointer;">
-						►
-					</button>
-				</div>
-			`;
-		}
-
-		function changePiPiPage(step) {
-			pipiPage += step;
-			renderPiPiTable();
-			document.getElementById('pipiTable').scrollIntoView({ behavior: 'smooth' });
-		}
-
-		function goToPiPiPage(pageNumber) {
-			pipiPage = parseInt(pageNumber);
-			renderPiPiTable();
-			document.getElementById('pipiTable').scrollIntoView({ behavior: 'smooth' });
-		}
-
 		async function filterPiPi() {
-			if (!isLoggedIn()) { showLoginScreen(); return; }
-			const btn = document.getElementById('btnPiPiFilter');
+			const sDate = document.getElementById('pipiStartDate').value;
+			const eDate = document.getElementById('pipiEndDate').value;
 			const load = document.getElementById('loadPiPi');
-			if (btn) btn.disabled = true;
+			const tbody = document.getElementById('pipiBody');
+
+			if (!sDate || !eDate) {
+				alert("Vui lòng chọn khoảng ngày!");
+				return;
+			}
+
 			if (load) load.style.display = 'inline-block';
 
 			try {
-				// Chỉ khi bấm LỌC mới fetch & render bảng
-				const useDateParams = Boolean(document.getElementById('pipiStartDate').value && document.getElementById('pipiEndDate').value);
-				const d = await loadPiPiRows(useDateParams);
-				const rows = (Array.isArray(d) && d.length > 1) ? d.slice(1) : [];
-				pipiAllRows = rows.filter(r => Array.isArray(r) && r.some(cell => String(cell ?? '').trim() !== ''));
-				// Nếu không set ngày thì hiển thị toàn bộ; nếu có ngày thì filter theo range (client-side)
-				applyPiPiFilter();
-				// update lại tiền mặt tồn hiện tại + tổng hợp (full sheet)
-				renderPiPiCurrentBalance(pipiCurrentCashBalance);
-				renderPiPiSummaryFromRows(pipiAllRowsCache);
-				renderPiPiTable();
-			} catch (e) {
-				console.error('Lỗi load PiPi:', e);
-				document.getElementById('pipiBody').innerHTML = `<tr><td colspan="11">Lỗi tải dữ liệu PiPi</td></tr>`;
+				// Gửi ĐÚNG startDate và endDate
+				const url = `${APP_URL}?action=get&type=PiPi&startDate=${sDate}&endDate=${eDate}`;
+				const response = await fetch(url);
+				const data = await response.json();
+
+				if (Array.isArray(data) && data.length > 1) {
+					// Loại bỏ dòng tiêu đề và gán vào biến toàn cục
+					pipiAllRows = data.slice(1).filter(r => r[0] !== "");
+
+					updatePiPiSummaryDisplay(pipiAllRows); // Cập nhật 3 ô thống kê
+					renderPiPiTableNew(); // Gọi hàm vẽ bảng mới
+				} else {
+					pipiAllRows = [];
+					tbody.innerHTML = '<tr><td colspan="11" style="text-align:center; padding:20px;">Không tìm thấy dữ liệu.</td></tr>';
+				}
+			} catch (error) {
+				console.error("Lỗi:", error);
+				tbody.innerHTML = '<tr><td colspan="11" style="text-align:center; color:red; padding:20px;">Lỗi kết nối hoặc dữ liệu Sheets sai format ngày!</td></tr>';
 			} finally {
-				if (btn) btn.disabled = false;
 				if (load) load.style.display = 'none';
 			}
 		}
 
-		function getBaseCashBalanceForDate(dateKey) {
-			// base = tồn tiền mặt của ngày gần nhất trước dateKey trong full cache
-			if (!dateKey) return 0;
-			const target = new Date(dateKey); target.setHours(0,0,0,0);
-			const sortedAsc = [...(pipiAllRowsCache || [])].sort((a, b) => {
-				const da = parsePiPiDate(a[0]) || new Date(0);
-				const db = parsePiPiDate(b[0]) || new Date(0);
-				return da - db;
+		function updatePiPiSummaryDisplay(rows) {
+			let totalRevenue = 0; // Tổng (Doanh thu máy + Thu khác)
+			let totalY = 0;       // Tổng Tiền Nhập Ý
+			let lastBalance = 0;  // Tổng tồn mặt hiện tại
+
+			// rows là mảng chứa các dòng dữ liệu từ Sheet PiPi (đã bỏ header)
+			rows.forEach(row => {
+				// Cột B (index 1): Doanh thu máy
+				// Cột C (index 2): Thu nhập khác
+				const dtMay = parseFloat(row[1]) || 0;
+				const thuKhac = parseFloat(row[2]) || 0;
+				totalRevenue += (dtMay + thuKhac);
+
+				// Cột E (index 4): Tiền nhập Ý
+				totalY += (parseFloat(row[4]) || 0);
 			});
-			let base = 0;
-			for (const r of sortedAsc) {
-				const dk = getPiPiDateKey(r[0]);
-				if (!dk) continue;
-				const d = new Date(dk); d.setHours(0,0,0,0);
-				if (d < target) base = toNumberSafe(r[8]) || 0;
-				else break;
+
+			if (rows.length > 0) {
+				// Lấy dòng cuối cùng trong bảng để lấy Tồn mặt hiện tại
+				// Cột J (index 9): Tổng tiền mặt
+				const lastRow = rows[rows.length - 1];
+				lastBalance = parseFloat(lastRow[9]) || 0;
 			}
-			return base;
+
+			// Cập nhật lên giao diện (đảm bảo ID khớp với HTML của bạn)
+			if (document.getElementById('statPiPiTong')) {
+				document.getElementById('statPiPiTong').innerText = totalRevenue.toLocaleString('vi-VN');
+			}
+			if (document.getElementById('statPiPiTienY')) {
+				document.getElementById('statPiPiTienY').innerText = totalY.toLocaleString('vi-VN');
+			}
+			if (document.getElementById('statPiPiTonTM')) {
+				document.getElementById('statPiPiTonTM').innerText = lastBalance.toLocaleString('vi-VN');
+			}
+
+			// Lưu lại số dư cuối cùng vào biến global để Modal "Thêm mới" sử dụng tính toán
+			window.pipiCurrentCashBalance = lastBalance;
 		}
 
-		function openPiPiEditModal(dateKey) {
-			// tìm row trong dữ liệu đang hiển thị trước
-			const row = (pipiFilteredRows || []).find(r => getPiPiDateKey(r[0]) === dateKey);
-			if (!row) return alert('Không tìm thấy dòng cần sửa.');
+		function renderPiPiTableNew() {
+			const tbody = document.getElementById('pipiBody'); // Phải khớp với ID trong HTML
+			if (!tbody) {
+				console.error("Không tìm thấy phần tử pipiBody trong HTML!");
+				return;
+			}
 
-			pipiEditMode = true;
-			pipiEditDateKey = dateKey;
-			pipiBaseCashBalanceForCalc = getBaseCashBalanceForDate(dateKey);
+			tbody.innerHTML = ''; // Xóa nội dung cũ
 
-			const dateEl = document.getElementById('pipiDate');
-			dateEl.value = dateKey;
-			dateEl.disabled = true; // Ngày readonly khi edit
+			if (!pipiAllRows || pipiAllRows.length === 0) {
+				tbody.innerHTML = '<tr><td colspan="11" style="text-align:center; padding:20px;">Không có dữ liệu.</td></tr>';
+				return;
+			}
 
-			document.getElementById('pipiTong').value = toNumberSafe(row[1]) || '';
-			document.getElementById('pipiChuyenKhoan').value = toNumberSafe(row[2]) || '';
-			document.getElementById('pipiTienMat').value = toNumberSafe(row[3]) || '';
-			document.getElementById('pipiChuyenKhoanY').value = toNumberSafe(row[4]) || '';
-			document.getElementById('pipiChiPhi').value = toNumberSafe(row[5]) || '';
-			document.getElementById('pipiThuKhac').value = toNumberSafe(row[6]) || '';
-			document.getElementById('pipiGhiChu').value = String(row[9] ?? '');
+			pipiAllRows.forEach((row, index) => {
+				const tr = document.createElement('tr');
 
-			recalcPiPiComputedFields();
-			document.getElementById('pipiModal').classList.add('open');
-		}
+				// Xử lý hiển thị ngày
+				let dateStr = formatDisplayDate(row[0]);
 
-		function openPiPiModal() {
-			if (!isLoggedIn()) { showLoginScreen(); return; }
-			pipiEditMode = false;
-			pipiEditDateKey = '';
-			pipiBaseCashBalanceForCalc = toNumberSafe(pipiCurrentCashBalance) || 0;
-			const todayStr = new Date().toISOString().split('T')[0];
-			const dateEl = document.getElementById('pipiDate');
-			// Không cho chọn ngày quá khứ (chỉ hôm nay trở đi)
-			dateEl.disabled = false;
-			dateEl.min = todayStr;
-			dateEl.value = todayStr;
-			['pipiTong','pipiChuyenKhoan','pipiTienMat','pipiChuyenKhoanY','pipiChiPhi','pipiThuKhac','pipiTienMatTrongNgay','pipiTonTienMat'].forEach(id => {
-				const el = document.getElementById(id);
-				if (el) el.value = '';
+				tr.innerHTML = `
+            <td>${dateStr}</td>
+            <td>${(parseFloat(row[1]) || 0).toLocaleString()}</td>
+            <td>${(parseFloat(row[2]) || 0).toLocaleString()}</td>
+            <td>${(parseFloat(row[3]) || 0).toLocaleString()}</td>
+            <td>${(parseFloat(row[4]) || 0).toLocaleString()}</td>
+            <td>${(parseFloat(row[5]) || 0).toLocaleString()}</td>
+            <td>${(parseFloat(row[6]) || 0).toLocaleString()}</td>
+            <td>${(parseFloat(row[7]) || 0).toLocaleString()}</td>
+            <td>${(parseFloat(row[8]) || 0).toLocaleString()}</td>
+            <td style="color:#00e676; font-weight:bold;">${(parseFloat(row[9]) || 0).toLocaleString()}</td>
+            <td title="${row[10] || ''}">${row[10] || ''}</td>
+        `;
+				tbody.appendChild(tr);
 			});
-			document.getElementById('pipiGhiChu').value = '';
-			document.getElementById('pipiModal').classList.add('open');
-			recalcPiPiComputedFields();
 		}
+		// Hàm lấy doanh thu từ sheet Sales theo ngày
+		async function fetchSalesRevenue() {
+			const dateInput = document.getElementById('pipiDate').value;
+			if (!dateInput) return;
+
+			const loading = document.getElementById('pipiLoading');
+			const btnSave = document.getElementById('btnSavePiPi');
+
+			// 1. Bật loading và tạm khóa nút Lưu để tránh dữ liệu sai
+			if (loading) loading.style.display = 'flex';
+			if (btnSave) btnSave.disabled = true;
+
+			try {
+				console.log("Đang lấy doanh thu cho ngày:", dateInput);
+				const response = await fetch(`${APP_URL}?action=get&type=Sales&start=${dateInput}&end=${dateInput}`);
+
+				if (!response.ok) throw new Error("Kết nối server thất bại");
+
+				const data = await response.json();
+				let totalRevenue = 0;
+
+				if (data && Array.isArray(data) && data.length > 1) {
+					for (let i = 1; i < data.length; i++) {
+						// Cộng dồn cột G (Index 6)
+						totalRevenue += parseFloat(data[i][6]) || 0;
+					}
+				}
+
+				document.getElementById('pipiDoanhThu').value = totalRevenue;
+				calculatePiPiLogic(); // Cập nhật các con số lý thuyết
+
+			} catch (e) {
+				console.error("Lỗi fetch doanh thu:", e);
+				alert("Không thể lấy dữ liệu doanh thu máy. Bạn có thể tự nhập nếu cần.");
+				document.getElementById('pipiDoanhThu').value = 0;
+			} finally {
+				// 2. QUAN TRỌNG: Lệnh này nằm trong finally nên CHẮC CHẮN sẽ chạy để tắt loading
+				setTimeout(() => {
+					if (loading) loading.style.display = 'none';
+					if (btnSave) btnSave.disabled = false;
+				}, 400);
+			}
+		}
+
+		// Hàm tính toán tự động các trường trong Modal
+		function calculatePiPiLogic() {
+			// Lấy số vừa được fetch về (Ví dụ: 494,000)
+			const dtMay = parseFloat(document.getElementById('pipiDoanhThu').value) || 0;
+			const thuK = parseFloat(document.getElementById('pipiThuKhac').value) || 0;
+			const ck = parseFloat(document.getElementById('pipiCK').value) || 0;
+			const y = parseFloat(document.getElementById('pipiCKY').value) || 0;
+			const chiP = parseFloat(document.getElementById('pipiChiPhi').value) || 0;
+
+			// Tiền lý thuyết = (Doanh thu máy + Thu khác) - Chuyển khoản - Tiền Ý - Chi phí
+			const lyThuyet = dtMay + thuK - ck - y - chiP;
+
+			document.getElementById('pipiLyThuyet').value = lyThuyet;
+
+			// Cập nhật chênh lệch dựa trên Tiền mặt thực tế người dùng nhập
+			const tmThucTe = parseFloat(document.getElementById('pipiTM').value) || 0;
+			document.getElementById('pipiChenhLech').value = tmThucTe - lyThuyet;
+			let tonNgayTruoc = 0;
+			if (typeof pipiAllRows !== 'undefined' && pipiAllRows.length > 0) {
+				// Lấy dòng cuối cùng hiện có trong bảng làm số dư đầu kỳ
+				const lastRow = pipiAllRows[pipiAllRows.length - 1];
+				tonNgayTruoc = parseFloat(lastRow[9]) || 0;
+			}
+
+			// Nếu đang ở chế độ Sửa, ta cần lấy tồn của dòng ngay phía trước dòng đang sửa
+			// Nhưng với "Thêm hôm nay", ta mặc định lấy dòng cuối bảng.
+			const tongTonHienTai = tonNgayTruoc + tmThucTe;
+			document.getElementById('pipiTonTM').value = tongTonHienTai;
+		}
+
+		async function openPiPiModal(editData = null) {
+			const modal = document.getElementById('pipiModal');
+			// Quan trọng: hiện modal dưới dạng flex để căn giữa
+			modal.style.display = 'flex';
+
+			if (editData) {
+				// Chế độ sửa: Không chặn ngày để có thể xem lại, nhưng thường là khóa ô ngày
+				document.getElementById('pipiModalTitle').innerText = "Chỉnh sửa Doanh thu PiPi";
+				dateInput.readOnly = true;
+				dateInput.min = "";
+				// ... (đổ dữ liệu vào các trường)
+			} else {
+				// Chế độ thêm mới
+				document.getElementById('pipiModalTitle').innerText = "Thêm Doanh thu PiPi";
+				// 1. Set ngày mặc định là hôm nay theo định dạng YYYY-MM-DD
+				const today = new Date().toISOString().split('T')[0];
+				const dateInput = document.getElementById('pipiDate');
+				dateInput.value = today;
+				dateInput.readOnly = false;
+				dateInput.max = today;
+
+				// Reset các trường về 0 trước khi tính
+				document.getElementById('pipiThuKhac').value = 0;
+				document.getElementById('pipiCK').value = 0;
+				document.getElementById('pipiCKY').value = 0;
+				document.getElementById('pipiChiPhi').value = 0;
+				document.getElementById('pipiTM').value = 0;
+
+
+				// 2. Tự động lấy doanh thu máy của ngày hôm nay
+				await fetchSalesRevenue();
+
+				// 3. Reset các trường nhập liệu khác về 0
+				const fields = ['pipiThuKhac', 'pipiCK', 'pipiCKY', 'pipiChiPhi', 'pipiTM', 'pipiGhiChu'];
+				fields.forEach(id => {
+					const el = document.getElementById(id);
+					if (el) el.value = (el.type === 'number') ? 0 : "";
+				});
+			}
+		}
+
 
 		function closePiPiModal() {
-			document.getElementById('pipiModal').classList.remove('open');
-			const dateEl = document.getElementById('pipiDate');
-			if (dateEl) dateEl.disabled = false;
+			const modal = document.getElementById('pipiModal');
+			if (modal) {
+				// 1. Ẩn modal bằng cả 2 cách để đảm bảo an toàn
+				modal.style.display = 'none';
+				modal.classList.remove('open');
+
+				// 2. Mở khóa ô ngày (nếu trước đó bị khóa khi sửa)
+				const dateEl = document.getElementById('pipiDate');
+				if (dateEl) {
+					dateEl.disabled = false;
+					dateEl.readOnly = false;
+				}
+
+				console.log("Đã đóng Modal PiPi thành công");
+			}
 		}
 
-		async function savePiPiRow() {
-			const btn = document.getElementById('btnPiPiSave');
-			const load = document.getElementById('loadPiPiSave');
-			if (btn) btn.disabled = true;
-			if (load) load.style.display = 'inline-block';
+		async function savePiPi() {
+			const btn = document.getElementById('btnSavePiPi');
+			const dateValue = document.getElementById('pipiDate').value;
+
+			if (!dateValue) {
+				alert("Vui lòng chọn ngày!");
+				return;
+			}
+
+			const modalLoading = document.getElementById('pipiModalLoading');
+			const btnSave = document.querySelector('#pipiModal .btn-success'); // Nút lưu
+
+			// 2. Hiển thị Overlay và vô hiệu hóa nút bấm
+			if (modalLoading) modalLoading.style.display = 'flex';
+			if (btnSave) btnSave.disabled = true;
+
+			// Kiểm tra ngày đã tồn tại trong sheet PiPi chưa
+			let isUpdate = false;
+			try {
+				const checkRes = await fetch(`${APP_URL}?action=get&type=PiPi&startDate=${dateValue}&endDate=${dateValue}`);
+				const checkData = await checkRes.json();
+				if (Array.isArray(checkData) && checkData.length > 1) {
+					const rows = checkData.slice(1).filter(r => r[0] !== "");
+					isUpdate = rows.some(r => getLocalDateKey(r[0]) === dateValue);
+				}
+			} catch (e) {
+				console.error("Lỗi kiểm tra ngày:", e);
+				alert("Không thể kiểm tra dữ liệu ngày này. Vui lòng thử lại.");
+				return;
+			}
+
+			// Lấy giá trị từ UI
+			const doanhThuMay = parseFloat(document.getElementById('pipiDoanhThu').value) || 0;
+			const thuKhac = parseFloat(document.getElementById('pipiThuKhac').value) || 0;
+			const ck = parseFloat(document.getElementById('pipiCK').value) || 0;
+			const tienY = parseFloat(document.getElementById('pipiCKY').value) || 0;
+			const chiPhi = parseFloat(document.getElementById('pipiChiPhi').value) || 0;
+			const lyThuyet = parseFloat(document.getElementById('pipiLyThuyet').value) || 0;
+			const tmThucTe = parseFloat(document.getElementById('pipiTM').value) || 0;
+			const chenhLech = parseFloat(document.getElementById('pipiChenhLech').value) || 0;
+			const tonHienTai = parseFloat(document.getElementById('pipiTonTM').value) || 0;
+			const ghiChu = document.getElementById('pipiGhiChu').value || "";
+
+			btn.disabled = true;
+			btn.innerText = "Đang lưu...";
+
+			// CẤU TRÚC MẢNG 11 CỘT KHỚP VỚI FILE GOOGLE SHEETS
+			// A: Ngày | B: Doanh Thu Máy | C: Thu nhập khác | D: Chuyển khoản | E: Tiền nhập Ý 
+			// F: Chi phí | G: Tiền mặt lý thuyết | H: Tiền mặt thực tế | I: Chênh lệch | J: Tổng tiền mặt | K: Ghi chú
+			const rowValues = [
+				dateValue,    // Cột A
+				doanhThuMay,  // Cột B
+				thuKhac,      // Cột C
+				ck,           // Cột D
+				tienY,        // Cột E
+				chiPhi,       // Cột F
+				lyThuyet,     // Cột G
+				tmThucTe,     // Cột H
+				chenhLech,    // Cột I
+				tonHienTai,   // Cột J
+				ghiChu        // Cột K
+			];
+
+			pipiEditMode = isUpdate;
+			const actionType = isUpdate ? "updatePiPi" : "addPiPi";
+			const payload = {
+				action: actionType,
+				values: rowValues
+			};
+
+			if (isUpdate) {
+				payload.date = dateValue;
+			}
 
 			try {
-				const date = pipiEditMode ? pipiEditDateKey : document.getElementById('pipiDate').value;
-				if (!date) return alert('Vui lòng chọn ngày.');
-				// Chỉ chặn thêm ngày quá khứ khi "Thêm mới"
-				if (!pipiEditMode) {
-					const todayStr = new Date().toISOString().split('T')[0];
-					if (date < todayStr) return alert('Không được thêm dữ liệu cho ngày quá khứ.');
-				}
-
-				// Tính lại để chắc chắn trước khi lưu
-				recalcPiPiComputedFields();
-				const cashInDayComputed = toNumberSafe(document.getElementById('pipiTienMatTrongNgay').value);
-				const cashBalanceComputed = toNumberSafe(document.getElementById('pipiTonTienMat').value);
-
-				const values = [
-					date,
-					toNumberSafe(document.getElementById('pipiTong').value),
-					toNumberSafe(document.getElementById('pipiChuyenKhoan').value),
-					toNumberSafe(document.getElementById('pipiTienMat').value),
-					toNumberSafe(document.getElementById('pipiChuyenKhoanY').value),
-					toNumberSafe(document.getElementById('pipiChiPhi').value),
-					toNumberSafe(document.getElementById('pipiThuKhac').value),
-					cashInDayComputed,
-					cashBalanceComputed,
-					(document.getElementById('pipiGhiChu').value || '').trim()
-				];
-
-				const payload = {
-					action: PIPI_ADD_ACTION,
-					sheet: PIPI_SHEET_NAME,
-					values,
-					row: {
-						ngay: values[0],
-						tong: values[1],
-						chuyenKhoan: values[2],
-						tienMat: values[3],
-						chuyenKhoanY: values[4],
-						chiPhi: values[5],
-						thuKhac: values[6],
-						tienMatTrongNgay: values[7],
-						tonTienMat: values[8],
-						ghiChu: values[9]
-					}
-				};
-
-				// Chọn action phù hợp (add / update)
-				if (pipiEditMode) {
-					payload.action = PIPI_UPDATE_ACTION;
-					payload.date = date; // key để backend tìm và update
-				}
-
 				const response = await fetch(APP_URL, {
-					method: 'POST',
+					method: "POST",
 					body: JSON.stringify(payload)
 				});
 
-				const text = await response.text();
-				let parsed = null;
-				try { parsed = JSON.parse(text); } catch { parsed = null; }
-				const statusOk = parsed ? (parsed.status === 'ok' || parsed.status === 'success') : /success|ok|added|inserted/i.test(text);
+				const result = await response.json();
 
-				if (!statusOk) {
-					alert(parsed?.message ? `Lỗi: ${parsed.message}` : `Không thể lưu PiPi: ${text}`);
-					return;
+				if (result.status === "ok") {
+					alert(pipiEditMode ? "Cập nhật thành công!" : "Thêm mới thành công!");
+					closePiPiModal();
+					initPiPiTab();
+				} else {
+					alert("Lỗi: " + result.message);
 				}
-
-				closePiPiModal();
-				// refresh lại tồn hiện tại + bảng (nếu user đang lọc)
-				await loadPiPiCurrentBalanceOnly();
-				alert(parsed?.message || (pipiEditMode ? 'Đã cập nhật PiPi thành công!' : 'Đã lưu PiPi thành công!'));
 			} catch (e) {
-				console.error('Lỗi lưu PiPi:', e);
-				alert('Lỗi lưu PiPi: ' + e.message);
+				console.error("Lưu PiPi thất bại:", e);
+				alert("Lỗi kết nối server: " + e.message);
 			} finally {
-				// reset trạng thái edit sau khi thao tác
-				pipiEditMode = false;
-				pipiEditDateKey = '';
-				if (btn) btn.disabled = false;
-				if (load) load.style.display = 'none';
+				btn.disabled = false;
+				btn.innerText = "Lưu báo cáo";
+				if (modalLoading) modalLoading.style.display = 'none';
+				if (btnSave) btnSave.disabled = false;
 			}
 		}
 
