@@ -1958,7 +1958,7 @@
 				const exactA = tokens.every(t => na.split(' ').includes(t));
 				const exactB = tokens.every(t => nb.split(' ').includes(t));
 				return exactB - exactA;
-			}).slice(0, 20);
+			}).slice(0, 50);
 			if (!matches.length) { res.style.display = 'none'; return; }
 			res.innerHTML = matches.map(c => `
 				<div onmousedown="pickCustomer('${c.phone}','${c.name.replace(/'/g, "\\'")}',${c.points})"
