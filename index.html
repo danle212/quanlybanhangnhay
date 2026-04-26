@@ -139,8 +139,8 @@
 		}
 
 		.btn-success {
-			background: linear-gradient(135deg, #1db954, #17a045);
-			color: #fff;
+			background: linear-gradient(135deg, var(--secondary), var(--secondary));
+			color: #000;
 			box-shadow: 0 4px 15px rgba(29, 185, 84, 0.3);
 		}
 
@@ -951,7 +951,6 @@
 			/* Cực kỳ quan trọng để cột tiêu đề và nội dung thẳng hàng */
 		}
 
-		.pipi-table th,
 		.pipi-table td {
 			padding: 12px 8px;
 			border-bottom: 1px solid #333;
@@ -963,7 +962,7 @@
 
 		.pipi-table th {
 			background-color: #2a2a2a;
-			color: #00e676;
+			color: var(--secondary);
 			position: sticky;
 			top: 0;
 			z-index: 10;
@@ -1038,8 +1037,8 @@
 					</div>
 					<div class="tab" onclick="showTab(this, 'thongke')"><i class="fas fa-chart-bar"></i> <span>THỐNG
 							KÊ</span></div>
-					<div class="tab" onclick="showTab(this, 'pipi')"><i class="fas fa-coins"></i> <span>Doanh Thu
-							PiPi</span></div>
+					<div class="tab" onclick="showTab(this, 'pipi')"><i class="fas fa-coins"></i> <span>THU CHI
+							PIPI</span></div>
 					<div class="tab" onclick="showTab(this, 'caidat')"><i class="fas fa-cog"></i> <span>HỆ THỐNG</span>
 					</div>
 				</div>
@@ -1163,8 +1162,7 @@
 				<h2 style="margin: 0;">TỔNG: <span id="grandTotal" style="color:var(--secondary)">0</span> đ</h2>
 				<div style="display: flex; align-items: center; gap: 12px;">
 					<span id="loadSave" class="loader"><i class="fas fa-spinner fa-spin"></i> Đang lưu...</span>
-					<button class="btn btn-success" onclick="handleCheckout()"
-						style="width: 100%; padding: 15px; font-weight: bold; font-size: 18px;">
+					<button class="btn btn-success" onclick="handleCheckout()">
 						<i class="fas fa-cash-register"></i> THANH TOÁN
 					</button>
 				</div>
@@ -1257,16 +1255,16 @@
 					<thead>
 						<tr style="background: #2a2a2a; color: var(--secondary);">
 							<th style="width: 100px; padding: 12px;">Ngày</th>
-							<th style="width: 100px;">D.Thu Máy</th>
+							<th style="width: 100px;">Thu Máy</th>
 							<th style="width: 100px;">Thu Khác</th>
-							<th style="width: 100px;">C.Khoản</th>
-							<th style="width: 100px;">Nhập Ý</th>
-							<th style="width: 100px;">Chi Phí</th>
-							<th style="width: 100px;">Lý Thuyết</th>
-							<th style="width: 100px;">Thực Tế</th>
-							<th style="width: 80px;">C.Lệch</th>
+							<th style="width: 100px;">C.K</th>
+							<th style="width: 100px;">Ý</th>
+							<th style="width: 100px;">Chi</th>
+							<th style="width: 100px;">Tồn LT</th>
+							<th style="width: 100px;">Tồn TT</th>
+							<th style="width: 80px;">Lệch</th>
 							<th style="width: 120px;">Tổng Tồn</th>
-							<th style="width: 150px;">Ghi Chú</th>
+							<th style="width: 150px;">Note</th>
 						</tr>
 					</thead>
 					<tbody id="pipiBody">
@@ -1778,7 +1776,7 @@
 				const endInput = document.getElementById('pipiEndDate');
 				if (startInput && !startInput.value) {
 					const now = new Date();
-					startInput.value = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+					startInput.value = now.toISOString().split('T')[0];
 					endInput.value = now.toISOString().split('T')[0];
 				}
 
@@ -2951,9 +2949,26 @@
 				const data = await response.json();
 
 				if (Array.isArray(data) && data.length > 1) {
-					// Loại bỏ dòng tiêu đề và gán vào biến toàn cục
-					pipiAllRows = data.slice(1).filter(r => r[0] !== "");
+					let rawData = data.slice(1).filter(r => r && r[0]);
 
+					// Bước 2: Sắp xếp ngày mới nhất lên đầu (Xử lý cả định dạng / và -)
+					rawData.sort((a, b) => {
+						const parseDate = (val) => {
+							if (!val) return 0;
+							// Nếu là object Date sẵn
+							if (val instanceof Date) return val.getTime();
+							// Nếu là chuỗi DD/MM/YYYY
+							if (typeof val === 'string' && val.includes('/')) {
+								const parts = val.split('/');
+								return new Date(parts[2], parts[1] - 1, parts[0]).getTime();
+							}
+							// Các trường hợp khác (ISO YYYY-MM-DD)
+							const d = new Date(val);
+							return isNaN(d.getTime()) ? 0 : d.getTime();
+						};
+						return parseDate(b[0]) - parseDate(a[0]);
+					});
+					window.pipiAllRows = rawData;
 					updatePiPiSummaryDisplay(pipiAllRows); // Cập nhật 3 ô thống kê
 					renderPiPiTableNew(); // Gọi hàm vẽ bảng mới
 				} else {
@@ -3008,37 +3023,39 @@
 		}
 
 		function renderPiPiTableNew() {
-			const tbody = document.getElementById('pipiBody'); // Phải khớp với ID trong HTML
-			if (!tbody) {
-				console.error("Không tìm thấy phần tử pipiBody trong HTML!");
+			const tbody = document.getElementById('pipiBody');
+			if (!tbody) return;
+			tbody.innerHTML = '';
+
+			if (!window.pipiAllRows || window.pipiAllRows.length === 0) {
+				tbody.innerHTML = '<tr><td colspan="11" style="text-align:center; padding:20px;">Không có dữ liệu để hiển thị.</td></tr>';
 				return;
 			}
 
-			tbody.innerHTML = ''; // Xóa nội dung cũ
-
-			if (!pipiAllRows || pipiAllRows.length === 0) {
-				tbody.innerHTML = '<tr><td colspan="11" style="text-align:center; padding:20px;">Không có dữ liệu.</td></tr>';
-				return;
-			}
-
-			pipiAllRows.forEach((row, index) => {
+			window.pipiAllRows.forEach((row) => {
 				const tr = document.createElement('tr');
 
-				// Xử lý hiển thị ngày
-				let dateStr = formatDisplayDate(row[0]);
+				// Định dạng ngày hiển thị (sử dụng hàm formatDisplayDate có sẵn trong code của bạn)
+				let displayDate = row[0];
+				if (typeof formatDisplayDate === 'function') {
+					displayDate = formatDisplayDate(row[0]);
+				}
 
 				tr.innerHTML = `
-            <td>${dateStr}</td>
-            <td>${(parseFloat(row[1]) || 0).toLocaleString()}</td>
-            <td>${(parseFloat(row[2]) || 0).toLocaleString()}</td>
-            <td>${(parseFloat(row[3]) || 0).toLocaleString()}</td>
-            <td>${(parseFloat(row[4]) || 0).toLocaleString()}</td>
-            <td>${(parseFloat(row[5]) || 0).toLocaleString()}</td>
-            <td>${(parseFloat(row[6]) || 0).toLocaleString()}</td>
-            <td>${(parseFloat(row[7]) || 0).toLocaleString()}</td>
-            <td>${(parseFloat(row[8]) || 0).toLocaleString()}</td>
-            <td style="color:#00e676; font-weight:bold;">${(parseFloat(row[9]) || 0).toLocaleString()}</td>
-            <td title="${row[10] || ''}">${row[10] || ''}</td>
+            <td class="col-date">${displayDate}</td>
+            <td class="col-num">${(parseFloat(row[1]) || 0).toLocaleString()}</td>
+            <td class="col-num">${(parseFloat(row[2]) || 0).toLocaleString()}</td>
+            <td class="col-num">${(parseFloat(row[3]) || 0).toLocaleString()}</td>
+            <td class="col-num">${(parseFloat(row[4]) || 0).toLocaleString()}</td>
+            <td class="col-num">${(parseFloat(row[5]) || 0).toLocaleString()}</td>
+            <td class="col-num">${(parseFloat(row[6]) || 0).toLocaleString()}</td>
+            <td class="col-num">${(parseFloat(row[7]) || 0).toLocaleString()}</td>
+            <td class="col-num">${(parseFloat(row[8]) || 0).toLocaleString()}</td>
+            <td class="col-total" style="color:#00e676;">${(parseFloat(row[9]) || 0).toLocaleString()}</td>
+            <td class="col-note" title="${row[10] || ''}">${row[10] || ''}</td>
+            <td class="col-action">
+                <button class="btn-view" onclick="editPiPiRow('${row[0]}')">Sửa</button>
+            </td>
         `;
 				tbody.appendChild(tr);
 			});
@@ -3098,12 +3115,24 @@
 
 			// Tiền lý thuyết = (Doanh thu máy + Thu khác) - Chuyển khoản - Chi phí
 			const lyThuyet = dtMay + thuK - ck - chiP;
-
 			document.getElementById('pipiLyThuyet').value = lyThuyet;
+			if (lyThuyet > 0 || lyThuyet === 0) {
+				document.getElementById('pipiLyThuyet').style.color = "#03dac6"; // Xanh lá
+			} else if (lyThuyet < 0) {
+				document.getElementById('pipiLyThuyet').style.color = "#ff5252"; // Đỏ
+			}
 
 			// Cập nhật chênh lệch dựa trên Tiền mặt thực tế người dùng nhập
 			const tmThucTe = parseFloat(document.getElementById('pipiTM').value) || 0;
-			document.getElementById('pipiChenhLech').value = tmThucTe - lyThuyet;
+			const chenhLech = tmThucTe - lyThuyet;
+			document.getElementById('pipiChenhLech').value = chenhLech;
+			if (chenhLech > 0 || chenhLech === 0) {
+				document.getElementById('pipiChenhLech').style.color = "#03dac6"; // Xanh lá
+			} else if (chenhLech < 0) {
+				document.getElementById('pipiChenhLech').style.color = "#ff5252"; // Đỏ
+			}
+
+
 			let tonNgayTruoc = 0;
 			if (typeof pipiAllRows !== 'undefined' && pipiAllRows.length > 0) {
 				// Lấy dòng cuối cùng hiện có trong bảng làm số dư đầu kỳ
@@ -3111,10 +3140,14 @@
 				tonNgayTruoc = parseFloat(lastRow[9]) || 0;
 			}
 
-			// Nếu đang ở chế độ Sửa, ta cần lấy tồn của dòng ngay phía trước dòng đang sửa
 			// Nhưng với "Thêm hôm nay", ta mặc định lấy dòng cuối bảng.
-			const tongTonHienTai = tonNgayTruoc + tmThucTe -y;
+			const tongTonHienTai = tonNgayTruoc + tmThucTe - y;
 			document.getElementById('pipiTonTM').value = tongTonHienTai;
+			if (tongTonHienTai > 0 || tongTonHienTai === 0) {
+				document.getElementById('pipiTonTM').style.color = "#03dac6"; // Xanh lá
+			} else if (tongTonHienTai < 0) {
+				document.getElementById('pipiTonTM').style.color = "#ff5252"; // Đỏ
+			}
 		}
 
 		async function openPiPiModal(editData = null) {
