@@ -1133,7 +1133,6 @@
 				</div>
 				<div class="cart-actions" style="display:flex; gap:8px;">
 					<button class="btn" onclick="addToCart()"><i class="fas fa-plus"></i> THÊM</button>
-					<button class="btn btn-cyan" onclick="editCurrentProduct()">✏️ SỬA</button>
 				</div>
 			</div>
 
@@ -1331,6 +1330,15 @@
 					<span id="loadNewProd" class="loader" style="display:none;"><i class="fas fa-spinner fa-spin"></i>
 						Đang lưu...</span>
 				</div>
+			</div>
+
+			<div class="box" style="flex-direction: column; align-items: flex-start; margin-top: 20px;">
+				<h3 style="color: var(--secondary); margin: 0 0 15px;"><i class="fas fa-search"></i> TÌM & QUẢN LÝ SẢN PHẨM</h3>
+				<div style="display:flex; gap:10px; width:100%;">
+					<input type="text" id="searchProdAdmin" placeholder="Nhập mã hoặc tên sản phẩm..." oninput="searchProductAdmin()" style="flex:1;" autocomplete="off">
+					<button class="btn" style="background:#555;" onclick="document.getElementById('searchProdAdmin').value=''; renderProductList([])"><i class="fas fa-times"></i></button>
+				</div>
+				<div id="productListResult" style="width:100%; margin-top:12px; overflow-x:auto;"></div>
 			</div>
 
 			<div class="box" style="flex-direction: column; align-items: flex-start; margin-top: 20px;">
@@ -2232,6 +2240,80 @@
 			} finally {
 				if (btn) btn.disabled = false;
 				if (load) load.style.display = 'none';
+			}
+		}
+
+		function searchProductAdmin() {
+			const v = normalizeText(document.getElementById('searchProdAdmin').value.trim());
+			if (!v) { renderProductList([]); return; }
+			const tokens = v.split(' ').filter(Boolean);
+			const match = products.filter(p => {
+				const combined = normalizeText(`${p.code} ${p.name} ${p.barcode}`);
+				return tokens.every(t => combined.includes(t));
+			});
+			renderProductList(match);
+		}
+
+		function renderProductList(list) {
+			const el = document.getElementById('productListResult');
+			if (!list.length) { el.innerHTML = ''; return; }
+			el.innerHTML = `
+				<table>
+					<thead><tr>
+						<th>Mã SP</th><th>Tên sản phẩm</th><th>ĐVT</th><th>Giá</th><th>Mã vạch</th><th>Thao tác</th>
+					</tr></thead>
+					<tbody>${list.map(p => `
+						<tr>
+							<td>${p.code}</td>
+							<td>${p.name}</td>
+							<td>${p.unit}</td>
+							<td>${p.price.toLocaleString()}</td>
+							<td>${p.barcode || ''}</td>
+							<td style="white-space:nowrap;">
+								<button class="btn-view" style="background:var(--primary); color:#000;" onclick="editProductFromList('${p.code.replace(/'/g, "\\'")}')"><i class="fas fa-edit"></i> Sửa</button>
+								<button class="btn-view" style="background:#ff4d4d; color:#fff; margin-left:4px;" onclick="deleteProduct('${p.code.replace(/'/g, "\\'")}')"><i class="fas fa-trash"></i> Xóa</button>
+							</td>
+						</tr>`).join('')}
+					</tbody>
+				</table>`;
+		}
+
+		function editProductFromList(code) {
+			const p = products.find(x => x.code === code);
+			if (!p) return;
+			const codeInp = document.getElementById('newProdCode');
+			codeInp.value = p.code;
+			codeInp.readOnly = true;
+			document.getElementById('newProdName').value = p.name;
+			document.getElementById('newProdUnit').value = p.unit;
+			document.getElementById('newProdPrice').value = p.price;
+			document.getElementById('newProductBarcode').value = p.barcode || '';
+			// Scroll lên form
+			document.getElementById('newProdCode').scrollIntoView({ behavior: 'smooth', block: 'center' });
+		}
+
+		async function deleteProduct(code) {
+			const p = products.find(x => x.code === code);
+			if (!confirm(`Xác nhận xóa sản phẩm "${p?.name || code}"?`)) return;
+			const overlay = document.getElementById('loadingOverlay');
+			if (overlay) overlay.style.display = 'flex';
+			try {
+				const res = await fetch(APP_URL, {
+					method: 'POST',
+					body: JSON.stringify({ action: 'deleteProduct', code })
+				});
+				const data = await res.json();
+				if (data.status === 'ok') {
+					alert('Đã xóa sản phẩm thành công!');
+					await loadProducts();
+					searchProductAdmin();
+				} else {
+					alert('Lỗi: ' + data.message);
+				}
+			} catch(e) {
+				alert('Lỗi kết nối: ' + e.message);
+			} finally {
+				if (overlay) overlay.style.display = 'none';
 			}
 		}
 
